@@ -1,13 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
 :root {
 
     --background-primary: #060A14;
     --background-secondary: #090E1C;
     --background-tertiary: #0D1325;
     --background-quaternary: #111827;
+    --background-input: #111827;
 
     --text-primary: #F0F4FF;
-    --text-secondary: #F0F4FF;
-    --text-tertiary: #F0F4FF;
+    --text-secondary: #E2E8F0;
+    --text-tertiary: #7E8BA0;
 
     --border-primary: rgba(255, 255, 255, .06);
     --border-secondary: rgba(255,255,255,.05);
@@ -27,6 +30,5 @@
     --rosa: #EC4899;
     --violeta: #8B5CF6;
     
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 }
