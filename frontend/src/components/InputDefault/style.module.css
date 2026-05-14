@@ -1,0 +1,18 @@
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+}
+
+.label {
+    font-size: .8rem;
+    color: var(--text-tertiary);
+}
+
+.input {
+    background-color: var(--background-quaternary);
+    border: .1rem solid rgba(255, 255, 255, 0.06);
+    padding: .8rem 1rem;
+    outline: none;
+    color: white;
+}
