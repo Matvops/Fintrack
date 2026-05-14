@@ -2,9 +2,13 @@
 	margin: 0;
 	padding: 0;
 	border: 0;
-	font-size: 62.5%;
 }
 
 body {
     background-color: var(--background-primary);
+	height: 99vh;
+	margin-top: 1px;
+	color: var(--text-primary);
+	font-size: 62.5%;
+	font-family: 'Manrope', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
