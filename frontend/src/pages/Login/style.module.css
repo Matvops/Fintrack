@@ -1,0 +1,87 @@
+.container {
+    height: 99vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background-color: var(--background-tertiary);
+    max-width: 72rem;
+    width: clamp(12rem, 35vw, 24rem);
+    padding: 2rem 4rem;
+    margin: auto;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 1rem;
+}
+
+.modal svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: var(--ambar);
+    stroke: black;
+}
+
+.containerIcon {
+    background-color: var(--ambar);
+    width: fit-content;
+    border-radius: .4rem;
+    padding: .8rem;
+    margin: auto;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.title {
+    font-family: "Playfair Display", sans-serif;
+    font-size: xx-large;
+    text-align: center;
+}
+
+.title span {
+    color: var(--ambar);
+}
+
+.description {
+    font-size: small;
+    text-align: center;
+    color: var(--text-tertiary);
+}
+
+.selectForm {
+    display: flex;
+    justify-content: center;
+    margin: 2.4rem auto;
+    width: fit-content;
+}
+
+.selectTitleContainer {
+    padding: 1rem 4rem;
+    flex: 1;
+    background-color: var(--background-input);
+    border-radius: .2rem;
+    cursor: pointer;
+}
+
+.selectTitle {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: var(--text-tertiary);
+    font-size: normal;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+.active {
+    background-color: var(--ambar);
+}
+
+.textActive {
+    color: black;
+}
