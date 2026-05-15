@@ -4,6 +4,11 @@
     gap: .8rem;
 }
 
+.inputContainerPassword {
+    position: relative;
+    width: 100%;
+}
+
 .label {
     font-size: .8rem;
     color: var(--text-tertiary);
@@ -13,6 +18,26 @@
     background-color: var(--background-quaternary);
     border: .1rem solid rgba(255, 255, 255, 0.06);
     padding: .8rem 1rem;
+    padding-right: 3rem;
     outline: none;
     color: white;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.eyeButton {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--text-tertiary);
 }
