@@ -41,6 +41,7 @@ export function Login() {
               <InputDefault
                 label='E-MAIL'
                 placeholder='example@gmail.com'
+                type='email'
               />
             </div>
 
