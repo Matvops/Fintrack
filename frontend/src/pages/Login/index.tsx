@@ -2,8 +2,7 @@ import { TrendingUp } from 'lucide-react';
 import { Container } from '../../components/Container';
 import style from './style.module.css';
 import { useState } from 'react';
-import { InputDefault } from '../../components/InputDefault';
-import { ButtonDefault } from '../../components/ButtonDefault';
+import { FormLogin } from '../../components/FormLogin';
 
 export function Login() {
 
@@ -35,32 +34,7 @@ export function Login() {
             </div>
           </div>
 
-          <form className={style.form}>
-            
-            <div>
-              <InputDefault
-                label='E-MAIL'
-                placeholder='example@gmail.com'
-                type='email'
-              />
-            </div>
-
-            <div>
-              <InputDefault
-                label='Senha'
-                placeholder='example'
-                type='password'
-                autoComplete='off'
-              />
-            </div>
-
-            <div className={style.containerButton}>
-              <ButtonDefault 
-                text='Entrar'
-              />
-            </div>
-
-          </form>
+          <FormLogin />
 
         </div>
 
