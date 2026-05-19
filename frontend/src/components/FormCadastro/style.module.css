@@ -1,0 +1,15 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+.containerButton {
+    margin: auto;
+    width: 100%;
+}
+
+.containerPassword {
+    display: flex;
+    gap: .8rem;
+}
