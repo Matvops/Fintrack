@@ -1,0 +1,8 @@
+.title {
+    font-family: "Playfair Display", sans-serif;
+    text-align: center;
+}
+
+.title span {
+    color: var(--ambar);
+}
