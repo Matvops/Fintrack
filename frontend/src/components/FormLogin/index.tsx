@@ -1,8 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import { ButtonDefault } from "../ButtonDefault";
 import { InputDefault } from "../InputDefault";
 import style from './style.module.css';
 
 export function FormLogin() {
+  const navigate = useNavigate();
+
+  function login(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+    navigate('/home');
+  }
 
   return (
     <form className={style.form}>
@@ -27,6 +34,7 @@ export function FormLogin() {
       <div className={style.containerButton}>
         <ButtonDefault
           text='Entrar'
+          onClick={e => login(e)}
         />
       </div>
 

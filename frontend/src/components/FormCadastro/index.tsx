@@ -1,8 +1,16 @@
+import { useNavigate } from 'react-router-dom';
 import { ButtonDefault } from '../ButtonDefault';
 import { InputDefault } from '../InputDefault';
 import style from './style.module.css';
 
 export function FormCadastro() {
+  const navigate = useNavigate();
+
+
+  function cadastrar(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+    navigate('/home');
+  }
 
   return (
     <form className={style.form}>
@@ -42,6 +50,7 @@ export function FormCadastro() {
       <div className={style.containerButton}>
         <ButtonDefault
           text='Cadastrar'
+          onClick={e => cadastrar(e)}
         />
       </div>
 
