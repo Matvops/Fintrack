@@ -3,6 +3,7 @@ import { Container } from '../../components/Container';
 import style from './style.module.css';
 import { useState } from 'react';
 import { FormLogin } from '../../components/FormLogin';
+import { FormCadastro } from '../../components/FormCadastro';
 
 export function Login() {
 
@@ -34,7 +35,7 @@ export function Login() {
             </div>
           </div>
 
-          <FormLogin />
+          {typeForm === 'Entrar' ? <FormLogin /> : <FormCadastro />}
 
         </div>
 
