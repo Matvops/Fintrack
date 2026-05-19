@@ -4,6 +4,7 @@ import style from './style.module.css';
 import { useState } from 'react';
 import { FormLogin } from '../../components/FormLogin';
 import { FormCadastro } from '../../components/FormCadastro';
+import { Logo } from '../../components/Logo';
 
 export function Login() {
 
@@ -20,7 +21,7 @@ export function Login() {
               <TrendingUp />
             </div>
 
-            <h1 className={style.title}>Fin<span>track</span></h1>
+            <Logo size='big' />
 
             <p className={style.description}>Controle financeiro pessoal</p>
           </div>
