@@ -18,7 +18,7 @@ export function FormLogin() {
       <div>
         <InputDefault
           label='Senha'
-          placeholder='example'
+          placeholder='admin123'
           type='password'
           autoComplete='off'
         />
