@@ -66,6 +66,7 @@
     transition-property: all;
     transition-duration: 100ms;
     transition-timing-function: ease-in;
+    text-decoration: none;
 }
 
 .logout:hover, .section:hover {
