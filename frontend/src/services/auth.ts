@@ -1,0 +1,26 @@
+import api from './api';
+
+export const auth = {
+
+    async login(data: object) {
+
+        await api.get('/sanctum/csrf-cookie'); 
+
+        const response = await api.post("/api/login", data);
+        
+        return response.data;
+    },
+
+    async register(data: object) {
+        const response = await api.post("/api/register", data);
+
+        return response.data;
+    },
+
+    async logOut(data: object) {
+        const response = await api.post("/api/logout", data);
+
+        return response.data;
+    }
+
+}
