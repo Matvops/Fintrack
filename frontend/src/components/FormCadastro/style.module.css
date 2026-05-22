@@ -13,3 +13,13 @@
     display: flex;
     gap: .8rem;
 }
+
+.invalidInput {
+    border: 1rem solid red !important;
+}
+
+.messageError {
+    text-align: center;
+    color: rgb(177, 0, 0);
+    font-size: clamp(.4rem, 6vw, .8rem);
+}
