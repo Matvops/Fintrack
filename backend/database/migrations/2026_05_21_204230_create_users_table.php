@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('use_id')->autoIncrement();
             $table->string('use_name', 50);
             $table->string('use_email')->unique();
-            $table->string('use_verification_token')->unique();
+            $table->string('use_verification_token')->unique()->nullable();
             $table->timestamp('use_email_verified_at')->nullable();
             $table->text('use_password')->unique();
             $table->timestamps();
