@@ -34,6 +34,6 @@ class AuthController extends Controller {
 
         $response = $this->service->register($dados);
 
-        return response($response, 200);
+        return $this->sendResponse($response);
     }
 }
