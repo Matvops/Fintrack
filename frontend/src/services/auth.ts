@@ -12,6 +12,9 @@ export const auth = {
     },
 
     async register(data: object) {
+
+        await api.get('/sanctum/csrf-cookie'); 
+
         const response = await api.post("/api/register", data);
 
         return response.data;
