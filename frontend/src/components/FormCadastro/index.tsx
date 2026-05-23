@@ -2,6 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { ButtonDefault } from '../ButtonDefault';
 import { InputDefault } from '../InputDefault';
 import style from './style.module.css';
+import { useState } from 'react';
+import { auth } from '../../services/auth';
+import { toast } from 'react-toastify';
 
 export function FormCadastro() {
   const navigate = useNavigate();
@@ -13,9 +16,31 @@ export function FormCadastro() {
 
   const samePassword = password === confirmationPassword;
 
-  function cadastrar(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  async function cadastrar(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-    navigate('/home');
+
+    const json = {
+      name: name,
+      email: email,
+      password: password,
+      confirmationPassword: confirmationPassword
+    }
+
+    const response = await auth.register(json);
+
+    if(response.status) {
+      toast.success(response.message)
+      navigate('/home');
+    } else {
+      toast.error(response.message)
+      reset();
+    }
+  }
+
+  function reset() {
+    setEmail(null);
+    setPassword(null);
+    setConfirmationPassword(null);
   }
 
   return (
@@ -27,6 +52,7 @@ export function FormCadastro() {
           placeholder='José Da Silva'
           type='text'
           onChange={e => setName(e.target.value)}
+          value={name ?? ''}
         />
       </div>
 
@@ -36,6 +62,7 @@ export function FormCadastro() {
           placeholder='email@example.com'
           type='email'
           onChange={e => setEmail(e.target.value)}
+          value={email ?? ''}
         />
       </div>
 
@@ -47,6 +74,7 @@ export function FormCadastro() {
           autoComplete='off'
           onChange={e => setPassword(e.target.value)}
           style={samePassword ?  undefined : {borderWidth: 1, borderColor: 'red'}}
+          value={password ?? ''}
         />
 
          <InputDefault
@@ -56,6 +84,7 @@ export function FormCadastro() {
           autoComplete='off'
           onChange={e => setConfirmationPassword(e.target.value)}
           style={samePassword ? undefined : {borderWidth: 1, borderColor: 'red'}}
+          value={confirmationPassword ?? ''}
         />
       </div>
     
