@@ -22,4 +22,18 @@ class AuthController extends Controller {
         
         return response('123', 200);
     }
+
+    public function register(RegisterRequest $request) {
+        
+        $dados = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+            'conformationPassword' => $request->input('conformationPassword'),
+        ];
+
+        $response = $this->service->register($dados);
+
+        return response($response, 200);
+    }
 }
