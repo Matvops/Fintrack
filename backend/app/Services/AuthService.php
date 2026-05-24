@@ -78,12 +78,26 @@ class AuthService
 
             return Response::getResponse(true, message: 'sucesso');
         } catch(ValidationException $e) {
-
             return Response::getResponse(false, message: $e->getMessage(), code: $e->getCode());
         } catch(Exception $e) {
-
-            error_log($e->getMessage());
             return Response::getResponse(false, message: 'Error');
+        }
+
+    }
+
+    public function logout(int $use_id) {
+
+        try {
+
+            $user = $this->userRespository->getUserById($use_id);
+
+            if(!isset($user)) throw new ValidationException('Erro ao realizar login');
+
+            Auth::logout();
+            
+            return Response::getResponse(true, 'Logout realizado com sucesso');
+        } catch(Exception $e) {
+            return Response::getResponse(false, 'Erro ao realizar Logout');
         }
 
     }
