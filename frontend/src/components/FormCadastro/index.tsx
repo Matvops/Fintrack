@@ -4,7 +4,7 @@ import { InputDefault } from '../InputDefault';
 import style from './style.module.css';
 import { useState } from 'react';
 import { auth } from '../../services/auth';
-import { toast } from 'react-toastify';
+import { message } from '../../adapters/message';
 
 export function FormCadastro() {
   const navigate = useNavigate();
@@ -29,10 +29,10 @@ export function FormCadastro() {
     const response = await auth.register(json);
 
     if(response.status) {
-      toast.success(response.message)
+      message.success(response.message)
       navigate('/home');
     } else {
-      toast.error(response.message)
+      message.error(response.message)
       reset();
     }
   }
