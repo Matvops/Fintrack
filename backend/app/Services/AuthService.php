@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Utils\Response;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class AuthService
 {
@@ -30,6 +31,8 @@ class AuthService
             $user->use_email = $dados['email'];
             $user->use_password = bcrypt($dados['password']);
             $user->save();
+
+            Auth::login($user);
 
             return Response::getResponse(true, 'Usuário cadastrado com sucesso', code: 201);
         } catch (ValidationException $e) {
@@ -71,6 +74,8 @@ class AuthService
 
             if(!password_verify($password, $user->use_password)) throw new ValidationException('E-mail ou senha inválidos');
             
+            Auth::login($user);
+
             return Response::getResponse(true, message: 'sucesso');
         } catch(ValidationException $e) {
 
