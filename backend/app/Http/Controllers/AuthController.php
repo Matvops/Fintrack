@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\AuthService;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller {
 
@@ -16,11 +16,16 @@ class AuthController extends Controller {
         $this->service = $service;
     }
 
-    public function login(Request $request) {
-
-        error_log(json_encode($request->all()));
+    public function login(LoginRequest $request) {
         
-        return response('123', 200);
+        $dados = [
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+        ];
+
+        $response = $this->service->login($dados);
+
+        return $this->sendResponse($response);
     }
 
     public function register(RegisterRequest $request) {
