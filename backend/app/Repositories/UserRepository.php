@@ -10,4 +10,9 @@ class UserRepository {
     {
         return User::where('use_email', $email)->first();
     }
+
+    public function getUserById(int $id): ?User
+    {
+        return User::find($id);
+    }
 }
