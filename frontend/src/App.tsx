@@ -1,12 +1,15 @@
+import { UserContextProvider } from "./contexts/UserContextProvider"
 import { MainRouter } from "./routers/MainRouter"
 import { ToastWrapper } from "./wrappers/ToastWrapper"
 
 function App() {
 
   return (
-    <ToastWrapper>
-      <MainRouter />
-    </ToastWrapper>
+    <UserContextProvider>
+      <ToastWrapper>
+        <MainRouter />
+      </ToastWrapper>
+    </UserContextProvider>
   )
 }
 
