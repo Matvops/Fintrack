@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { initialState } from "./initialState";
 import { UserContext } from "./UserContext";
 
@@ -9,6 +9,10 @@ type UserContextProviderProps = {
 export function UserContextProvider({ children }: UserContextProviderProps) {
 
   const [user, setUser] = useState(initialState);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
