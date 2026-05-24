@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|max:50|min:1',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,use_email',
             'password' => 'required',
             'confirmationPassword' => 'required|same:password',
         ];
@@ -40,6 +40,7 @@ class RegisterRequest extends FormRequest
             'name.min' => 'O nome deve conter no mínimo :min dígitos',
             'name.max' => 'O nome deve conter no máximo :max dígitos',
             'email.email' => 'Email inválido',
+            'email.unique' => 'Email indisponível',
             'confirmationPassword.same' => 'Senhas são diferentes'
         ];
     }
