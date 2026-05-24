@@ -1,0 +1,1 @@
+export type MainColor = 'ambar' | 'esmeralda' | 'azul' | 'rosa' | 'violeta';
