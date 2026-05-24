@@ -3,12 +3,14 @@ import { ButtonDefault } from "../ButtonDefault";
 import { InputDefault } from "../InputDefault";
 import style from './style.module.css';
 import { auth } from "../../services/auth";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { message } from "../../adapters/message";
+import { UserContext } from "../../contexts/UserContext";
 
 export function FormLogin() {
   const navigate = useNavigate();
 
+  const { setUser } = useContext(UserContext);
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
 
@@ -22,9 +24,21 @@ export function FormLogin() {
 
     const response = await auth.login(json);
 
-    console.log(response);
     if (response.status) {
-      message.success(response.message)
+
+      const data = response.data;
+      setUser((prevState) => {
+
+        return {
+          ...prevState,
+          email: data.email,
+          name: data.name,
+          id: data.id,
+        };
+
+      })
+
+      message.success(response.message);
       navigate('/home');
     } else {
       message.error(response.message)
