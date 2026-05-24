@@ -4,12 +4,19 @@ namespace App\Services;
 
 use App\Exceptions\ValidationException;
 use App\Models\User;
+use App\Repositories\UserRepository;
 use App\Utils\Response;
 use Exception;
 
 class AuthService
 {
 
+    private UserRepository $userRespository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRespository = $userRepository;
+    }
 
     public function register(array $dados): Response
     {
@@ -48,5 +55,31 @@ class AuthService
 
         if(str_contains('..', $domain)) throw new ValidationException('Email inválido');
  
+    }
+
+    public function login(array $dados): Response
+    {
+
+        try {
+            
+            $email = $dados['email'];
+            $password = $dados['password'];
+
+            $user = $this->userRespository->getUserByEmail($email);
+
+            if(!isset($user)) throw new ValidationException('E-mail ou senha inválidos');
+
+            if(!password_verify($password, $user->use_password)) throw new ValidationException('E-mail ou senha inválidos');
+            
+            return Response::getResponse(true, message: 'sucesso');
+        } catch(ValidationException $e) {
+
+            return Response::getResponse(false, message: $e->getMessage(), code: $e->getCode());
+        } catch(Exception $e) {
+
+            error_log($e->getMessage());
+            return Response::getResponse(false, message: 'Error');
+        }
+
     }
 }
