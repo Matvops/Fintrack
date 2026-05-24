@@ -3,11 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as AuthUser;
 
-class User extends Model
+class User extends AuthUser
 {
-    public $table = 'users'; 
-    public $primaryKey = 'use_id'; 
+    public $table = 'users';
+    public $primaryKey = 'use_id';
+
+    protected $hidden = [
+        'use_password'
+    ];
 
     public $fillable = [
         'use_id',
@@ -19,4 +24,10 @@ class User extends Model
         'created_at',
         'updated_at'
     ];
+
+
+    public function getAuthPassword()
+    {
+        return $this->use_password;
+    }
 }
