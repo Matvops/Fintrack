@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\ValidationException;
 use App\Models\User;
 use App\Utils\Response;
+use Exception;
 
 class AuthService
 {
@@ -26,6 +27,8 @@ class AuthService
             return Response::getResponse(true, 'Usuário cadastrado com sucesso', code: 201);
         } catch (ValidationException $e) {
             return Response::getResponse(false, $e->getMessage(), code: 400);
+        } catch(Exception $e) {
+            return Response::getResponse(false, 'Erro ao criar usuário', code: $e->getCode());
         }
     }
 
