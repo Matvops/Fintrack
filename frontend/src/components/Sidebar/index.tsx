@@ -1,19 +1,36 @@
-import { CreditCard, LayoutDashboard, LogOut, Settings, Target, Wallet } from "lucide-react";
+import { CreditCard, LayoutDashboard, LogOutIcon, Settings, Target, Wallet } from "lucide-react";
 import { Logo } from "../Logo";
 import style from './style.module.css';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
+import { auth } from "../../services/auth";
+import { initialState } from "../../contexts/initialState";
 
 type sections = 'home' | 'transactions' | 'orcamento' | 'goals' | 'settings';
 
 
 export function Sidebar() {
 
+  const { user, setUser } = useContext(UserContext);
   const navigation = useNavigate();
   const locate = useLocation();
   const page = locate.pathname.split('/')[1];
 
   function setPage(activeSection: sections) {
     navigation(`/${activeSection}`);
+  }
+
+  async function LogOut() {
+
+    const payload = {
+      id: user.id
+    };
+
+    await auth.logOut(payload);
+    setUser(initialState);
+
+    navigation('/');
   }
 
   return (
@@ -54,9 +71,9 @@ export function Sidebar() {
       </nav>
 
       <div className={style.logoutContainer}>
-        <Link to={'/'} className={style.logout}>
-          <LogOut /> Sair
-        </Link>
+        <div onClick={() => LogOut()} className={style.logout}>
+          <LogOutIcon /> Sair
+        </div>
       </div>
     </div>
   );
