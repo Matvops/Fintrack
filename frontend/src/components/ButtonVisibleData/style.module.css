@@ -1,0 +1,19 @@
+.button {
+    background-color: var(--background-tertiary);
+    padding: .2rem .6rem;
+    border-radius: .4rem;
+    cursor: pointer;
+    transition-property: all;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in;
+}
+
+.button svg {
+    color: var(--text-tertiary);
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.button:hover svg {
+    color: white;
+}
