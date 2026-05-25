@@ -1,10 +1,11 @@
-import { Sidebar } from '../../components/Sidebar';
+import { Heading } from '../../components/Heading';
+import { MainTemplate } from '../../templates/MainTemplate';
 
 export function Home() {
 
   return (
-    <div style={{ height: '100%', width: '100%' }}>
-      <Sidebar />
-    </div>
+    <MainTemplate>
+      <Heading text='Dashboard' />
+    </MainTemplate>
   );
 }
