@@ -2,17 +2,19 @@ import { useNavigate } from 'react-router-dom';
 import { ButtonDefault } from '../ButtonDefault';
 import { InputDefault } from '../InputDefault';
 import style from './style.module.css';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { auth } from '../../services/auth';
 import { message } from '../../adapters/message';
+import { UserContext } from '../../contexts/UserContext';
 
 export function FormCadastro() {
   const navigate = useNavigate();
-  
-  const [name, setName] = useState<string|null>(null);
-  const [email, setEmail] = useState<string|null>(null);
-  const [password, setPassword] = useState<string|null>(null);
-  const [confirmationPassword, setConfirmationPassword] = useState<string|null>(null);
+
+  const { setUser } = useContext(UserContext);
+  const [name, setName] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
+  const [confirmationPassword, setConfirmationPassword] = useState<string | null>(null);
 
   const samePassword = password === confirmationPassword;
 
@@ -28,7 +30,20 @@ export function FormCadastro() {
 
     const response = await auth.register(json);
 
-    if(response.status) {
+    if (response.status) {
+
+      const data = response.data;
+      setUser((prevState) => {
+
+        return {
+          ...prevState,
+          email: data.email,
+          name: data.name,
+          id: data.id,
+        };
+
+      });
+
       message.success(response.message)
       navigate('/home');
     } else {
@@ -73,21 +88,21 @@ export function FormCadastro() {
           type='password'
           autoComplete='off'
           onChange={e => setPassword(e.target.value)}
-          style={samePassword ?  undefined : {borderWidth: 1, borderColor: 'red'}}
+          style={samePassword ? undefined : { borderWidth: 1, borderColor: 'red' }}
           value={password ?? ''}
         />
 
-         <InputDefault
+        <InputDefault
           label='Confirme a senha'
           placeholder='admin123'
           type='password'
           autoComplete='off'
           onChange={e => setConfirmationPassword(e.target.value)}
-          style={samePassword ? undefined : {borderWidth: 1, borderColor: 'red'}}
+          style={samePassword ? undefined : { borderWidth: 1, borderColor: 'red' }}
           value={confirmationPassword ?? ''}
         />
       </div>
-    
+
       <div className={style.containerButton}>
         <ButtonDefault
           text='Cadastrar'
