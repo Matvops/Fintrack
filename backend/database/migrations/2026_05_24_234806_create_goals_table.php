@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('goals', function (Blueprint $table) {
             $table->id('gls_id')->autoIncrement();
+            $table->foreignId('gls_use_id')
+                        ->references('use_id')
+                        ->on('users');
             $table->string('gls_name');
             $table->string('gls_balance');
             $table->string('gls_balance_target');
