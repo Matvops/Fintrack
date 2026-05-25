@@ -1,15 +1,20 @@
 import { CreditCard, LayoutDashboard, LogOut, Settings, Target, Wallet } from "lucide-react";
 import { Logo } from "../Logo";
 import style from './style.module.css';
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-type sections = 'Dashboard' | 'Transacoes' | 'Orcamento' | 'Metas' | 'Configuracoes';
+type sections = 'home' | 'transactions' | 'orcamento' | 'goals' | 'settings';
 
 
 export function Sidebar() {
 
-  const [activeSection, setActiveSection] = useState<sections>('Dashboard');
+  const navigation = useNavigate();
+  const locate = useLocation();
+  const page = locate.pathname.split('/')[1];
+
+  function setPage(activeSection: sections) {
+    navigation(`/${activeSection}`);
+  }
 
   return (
     <div className={style.sidebar}>
@@ -17,32 +22,32 @@ export function Sidebar() {
 
       <nav className={style.sections}>
         <p
-          className={`${style.section} ${activeSection === 'Dashboard' ? style.activeSection : ''}`}
-          onClick={() => setActiveSection('Dashboard')}
+          className={`${style.section} ${page === 'home' ? style.activeSection : ''}`}
+          onClick={() => setPage('home')}
         >
           <LayoutDashboard />Dashboard
         </p>
         <p
-          className={`${style.section} ${activeSection === 'Transacoes' ? style.activeSection : ''}`}
-          onClick={() => setActiveSection('Transacoes')}
+          className={`${style.section} ${page === 'transactions' ? style.activeSection : ''}`}
+          onClick={() => setPage('transactions')}
         >
           <CreditCard />Transações
         </p>
         <p
-          className={`${style.section} ${activeSection === 'Orcamento' ? style.activeSection : ''}`}
-          onClick={() => setActiveSection('Orcamento')}
+          className={`${style.section} ${page === 'orcamentos' ? style.activeSection : ''}`}
+          onClick={() => setPage('orcamento')}
         >
           <Wallet />Orçamento
         </p>
         <p
-          className={`${style.section} ${activeSection === 'Metas' ? style.activeSection : ''}`}
-          onClick={() => setActiveSection('Metas')}
+          className={`${style.section} ${page === 'goals' ? style.activeSection : ''}`}
+          onClick={() => setPage('goals')}
         >
           <Target />Metas
         </p>
         <p
-          className={`${style.section} ${activeSection === 'Configuracoes' ? style.activeSection : ''}`}
-          onClick={() => setActiveSection('Configuracoes')}
+          className={`${style.section} ${page === 'settings' ? style.activeSection : ''}`}
+          onClick={() => setPage('settings')}
         >
           <Settings />Configurações
         </p>
