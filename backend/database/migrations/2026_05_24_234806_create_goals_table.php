@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('goals', function (Blueprint $table) {
             $table->id('gls_id')->autoIncrement();
-            $table->string('gls_name')->unique();
+            $table->string('gls_name');
             $table->string('gls_balance');
             $table->string('gls_balance_target');
             $table->enum('gls_color', ['AMBAR', 'ESMERALDA', 'AZUL', 'ROSA', 'VIOLETA']);
