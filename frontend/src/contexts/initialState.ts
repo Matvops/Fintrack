@@ -5,6 +5,6 @@ export const initialState: User = {
     name: '',
     email: '',
     mainColor: 'ambar',
-    hiddenData: false,
+    hiddenData: true,
     plan: 'Free'
 }
