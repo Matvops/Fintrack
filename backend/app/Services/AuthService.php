@@ -34,7 +34,13 @@ class AuthService
 
             Auth::login($user);
 
-            return Response::getResponse(true, 'Usuário cadastrado com sucesso', code: 201);
+            $data = [
+                'id' => $user->use_id,
+                'email' => $user->use_email,
+                'name' => $user->use_name
+            ];
+
+            return Response::getResponse(true, 'Usuário cadastrado com sucesso', data: $data, code: 201);
         } catch (ValidationException $e) {
             return Response::getResponse(false, $e->getMessage(), code: 400);
         } catch(Exception $e) {
@@ -76,7 +82,13 @@ class AuthService
             
             Auth::login($user);
 
-            return Response::getResponse(true, message: 'sucesso');
+            $data = [
+                'id' => $user->use_id,
+                'email' => $user->use_email,
+                'name' => $user->use_name
+            ];
+
+            return Response::getResponse(true, message: 'Login realizado com Sucesso!', data: $data);
         } catch(ValidationException $e) {
             return Response::getResponse(false, message: $e->getMessage(), code: $e->getCode());
         } catch(Exception $e) {
