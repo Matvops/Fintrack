@@ -30,4 +30,8 @@ class User extends AuthUser
     {
         return $this->use_password;
     }
+
+    public function goals() {
+        return $this->hasMany(Goal::class, 'gls_use_id');
+    }
 }
