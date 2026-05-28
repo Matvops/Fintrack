@@ -26,7 +26,7 @@ class CreateRequest extends FormRequest
             'id' => 'required|exists:users,use_id',
             'name' => 'required',
             'balance' => 'required',
-            'balance_target' => 'required',
+            'balanceTarget' => 'required',
             'color' => 'required|in:ambar,esmeralda,azul,rosa,violeta'
         ];
     }
