@@ -1,0 +1,52 @@
+
+.colors {
+    width: 100%;
+    display: flex;
+    gap: .6rem;
+}
+
+.color {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    border: .2rem solid transparent;
+    outline-offset: .2rem;
+    background-color: currentColor;
+    background-clip: padding-box;
+}
+
+.ambar {
+    background-color: var(--ambar);
+    --selected-color: var(--ambar);
+}
+
+.violeta {
+    background-color: var(--violeta);
+    --selected-color: var(--violeta);
+}
+
+.esmeralda {
+    background-color: var(--esmeralda);
+    --selected-color: var(--esmeralda);
+    
+}
+
+.rosa {
+    background-color: var(--rosa);
+    --selected-color: var(--rosa);
+}
+
+.azul {
+    background-color: var(--azul);
+    --selected-color: var(--azul);
+}
+
+.active {
+    outline: .2rem solid var(--selected-color);
+    border-color: white;
+    transition: all;
+    transition-duration: 100ms;
+    transition-timing-function: ease;
+}
+
