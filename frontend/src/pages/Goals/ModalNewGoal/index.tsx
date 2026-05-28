@@ -3,14 +3,15 @@ import { Check, X } from 'lucide-react';
 import { Heading } from '../../../components/Heading';
 import style from './style.module.css';
 import { InputDefault } from '../../../components/InputDefault';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Colors } from '../../../components/Colors';
 import type { MainColor } from '../../../types/MainColor';
 import type { NewGoalData } from '..';
+import { UserContext } from '../../../contexts/UserContext';
 
 type ModalNewGoalProps = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
-  cadastrar: (data: NewGoalData) => void
+  cadastrar: (data: NewGoalData, event: React.SubmitEvent<HTMLFormElement>) => void
 }
 
 export function ModalNewGoal({ setVisible, cadastrar }: ModalNewGoalProps) {
@@ -19,6 +20,9 @@ export function ModalNewGoal({ setVisible, cadastrar }: ModalNewGoalProps) {
   const [balance, setBalance] = useState('');
   const [balanceTarget, setBalanceTarget] = useState('');
   const [color, setColor] = useState<MainColor>('ambar');
+  const { user } = useContext(UserContext);
+  const [id] = useState(user.id);
+  
 
   const formatarParaReal = (valor: string): string => {
     // Remove tudo que não for dígito
@@ -45,7 +49,8 @@ export function ModalNewGoal({ setVisible, cadastrar }: ModalNewGoalProps) {
           </div>
         </div>
 
-        <form className={style.form}>
+        <form className={style.form} onSubmit={(e) => cadastrar({id, name, balance, balanceTarget, color}, e)}>
+
           <InputDefault
             label='NOME DA META'
             placeholder='Ex: Viagem p/ Europa'
@@ -80,7 +85,7 @@ export function ModalNewGoal({ setVisible, cadastrar }: ModalNewGoalProps) {
             />
           </div>
 
-          <div onClick={() => cadastrar({name, balance, balanceTarget, color})}>
+          <div>
             <button className={style.buttonHeaderSection}><Check /> Nova meta</button>
           </div>
         </form>
