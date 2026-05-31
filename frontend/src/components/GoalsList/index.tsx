@@ -4,10 +4,12 @@ import type { Goal } from '../../types/Goal';
 import { formatToReal } from '../../utils/formatToReal';
 
 type GoalsListProps = {
-  goals: Goal[] | []
+  goals: Goal[] | [],
+  setSelectedGoal: React.Dispatch<React.SetStateAction<Goal | undefined>>,
+  setModalEditVisible: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function GoalsList({ goals }: GoalsListProps) {
+export function GoalsList({ goals, setSelectedGoal, setModalEditVisible }: GoalsListProps) {
 
   const getCards = () => {
 
@@ -27,7 +29,11 @@ export function GoalsList({ goals }: GoalsListProps) {
               <h2 className={`${style.headerTitle} ${style[goal.gls_color.toLowerCase()]}`}>{formatToReal(goal.gls_balance)}</h2>
               <span className={style.headerSubTitle}>de {formatToReal(goal.gls_balance_target)}</span>
             </div>
-            <button className={style.buttonEdit}>
+            <button className={style.buttonEdit} onClick={() => {
+                setSelectedGoal(goal);
+                setModalEditVisible(true);
+              }}
+            >
               <Pencil /> Editar
             </button>
           </div>
