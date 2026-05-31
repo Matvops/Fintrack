@@ -32,13 +32,14 @@ export function Goals() {
     if (response.status) {
       message.success(response.message);
       setModalVisible(false);
+      getGoals();
       return;
     }
 
     message.error(response.message);
   }
 
-  useEffect(() => {
+  function getGoals() {
     const response = goal.get(user.id);
 
     message.dismiss();
@@ -52,7 +53,11 @@ export function Goals() {
         message.error(data.message);
       }
     })
-  }, [user.id]);
+  }
+
+  useEffect(() => {
+      getGoals();
+  }, []);
 
   return (
     <MainTemplate>

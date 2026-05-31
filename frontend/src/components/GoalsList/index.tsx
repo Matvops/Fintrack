@@ -11,8 +11,6 @@ export function GoalsList({ goals }: GoalsListProps) {
 
   const getCards = () => {
 
-    console.log(goals.length);
-    console.log(goals);
     if(goals.length === 0) return;
     
     return goals.map((goal, index) => (
