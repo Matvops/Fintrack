@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Goals\CreateRequest;
+use App\Http\Requests\Goals\GetGoalsRequest;
 use App\Services\GoalsService;
 
 class GoalsController extends Controller {
@@ -25,6 +26,15 @@ class GoalsController extends Controller {
         ];
 
         $response = $this->service->create($data);
+
+        return $this->sendResponse($response);
+    }
+
+    public function getGoals(GetGoalsRequest $request) {
+
+        $id = $request->input('id');
+
+        $response = $this->service->getGoals($id);
 
         return $this->sendResponse($response);
     }
