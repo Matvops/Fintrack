@@ -7,7 +7,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { auth } from "../../services/auth";
 import { initialState } from "../../contexts/initialState";
 
-type sections = 'home' | 'transactions' | 'orcamento' | 'goals' | 'settings';
+type sections = 'home' | 'transactions' | 'budgets' | 'goals' | 'settings';
 
 
 export function Sidebar() {
@@ -51,8 +51,8 @@ export function Sidebar() {
           <CreditCard />Transações
         </p>
         <p
-          className={`${style.section} ${page === 'orcamentos' ? style.activeSection : ''}`}
-          onClick={() => setPage('orcamento')}
+          className={`${style.section} ${page === 'budgets' ? style.activeSection : ''}`}
+          onClick={() => setPage('budgets')}
         >
           <Wallet />Orçamento
         </p>
