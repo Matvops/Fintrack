@@ -26,11 +26,30 @@ export const goal = {
         }
     },
 
-     async edit(data: Goal): Promise<ResponseApi>  
+    async edit(data: Goal): Promise<ResponseApi>  
     {
 
         try {
             const response = await api.post("/goals/edit", data);
+
+            return response.data;
+        } catch (error: unknown) {
+
+            const message = getMessageError(error);
+
+            return {
+                status: false,
+                message: message,
+                data: {}
+            };
+        }
+    },
+
+    async delete(id: number): Promise<ResponseApi>  
+    {
+
+        try {
+            const response = await api.post("/goals/delete", {id});
 
             return response.data;
         } catch (error: unknown) {
