@@ -34,4 +34,8 @@ class User extends AuthUser
     public function goals() {
         return $this->hasMany(Goal::class, 'gls_use_id');
     }
+
+    public function budgets() {
+        return $this->hasMany(Budget::class, 'bdt_use_id');
+    }
 }
