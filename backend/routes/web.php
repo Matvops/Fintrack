@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BudgetsController;
 use App\Http\Controllers\GoalsController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,7 +10,18 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::post('/goals/create', [GoalsController::class, 'create']);
-Route::post('/goals/edit', [GoalsController::class, 'edit']);
-Route::post('/goals/get', [GoalsController::class, 'getGoals']);
-Route::post('/goals/delete', [GoalsController::class, 'delete']);
+
+Route::prefix('goals')->group(function() {
+    Route::post('/create', [GoalsController::class, 'create']);
+    Route::post('/edit', [GoalsController::class, 'edit']);
+    Route::post('/get', [GoalsController::class, 'getGoals']);
+    Route::post('/delete', [GoalsController::class, 'delete']);
+});
+
+
+Route::prefix('budgets')->group(function() {
+    Route::post('/create', [BudgetsController::class, 'create']);
+    Route::post('/edit', [GoalsController::class, 'edit']);
+    Route::post('/get', [GoalsController::class, 'getBudgets']);
+    Route::post('/delete', [GoalsController::class, 'delete']);
+});
