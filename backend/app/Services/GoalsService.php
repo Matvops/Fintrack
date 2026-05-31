@@ -7,8 +7,10 @@ use App\Exceptions\ValidationException;
 use App\Models\Goal;
 use App\Repositories\GoalRepository;
 use App\Repositories\UserRepository;
+use App\Utils\Functions;
 use App\Utils\Response;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class GoalsService
 {
@@ -31,8 +33,8 @@ class GoalsService
 
             if (!isset($user)) throw new ValidationException('Erro ao criar meta', 404);
 
-            $balance = $this->formatValue($data['balance']);
-            $balanceTarget = $this->formatValue($data['balanceTarget']);
+            $balance = Functions::formatValue($data['balance']);
+            $balanceTarget = Functions::formatValue($data['balanceTarget']);
 
             $goal = new Goal();
             $goal->gls_use_id = $user->use_id;
@@ -81,38 +83,44 @@ class GoalsService
     {
         try {
 
+            DB::beginTransaction();
+
             $goal = $this->goalRepository->getGoalById($request['gls_id']);
 
             $goal->gls_name = $request['gls_name'];
-            $goal->gls_balance = $this->formatValue($request['gls_balance']);
-            $goal->gls_balance_target = $this->formatValue($request['gls_balance_target']);
+            $goal->gls_balance = Functions::formatValue($request['gls_balance']);
+            $goal->gls_balance_target = Functions::formatValue($request['gls_balance_target']);
             $goal->gls_color = strtoupper($request['gls_color']);
             $goal->save();
 
+            DB::commit();
+
             return Response::getResponse(true, 'Meta editada com sucesso');
         } catch (NotFoundException $e) {
+            DB::rollBack();
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
         } catch (Exception $e) {
+            DB::rollBack();
             return Response::getResponse(false, 'Metas não localizadas', code: 500);
         }
-    }
-
-    private function formatValue(string $value)
-    {
-        return preg_replace('/[^0-9.]/', '', str_replace(',', '.', str_replace('.', '', $value)));
     }
 
     public function delete(int $id): Response
     {
         try {
 
+            DB::beginTransaction();
+
             $goal = $this->goalRepository->getGoalById($id);
             $goal->delete();
 
+            DB::commit();
             return Response::getResponse(true, 'Meta excluída com sucesso');
         } catch (NotFoundException $e) {
+            DB::rollBack();
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
         } catch (Exception $e) {
+            DB::rollBack();
             return Response::getResponse(false, 'Metas não localizadas', code: 500);
         }
     }
