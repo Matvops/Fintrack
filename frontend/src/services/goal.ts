@@ -1,5 +1,6 @@
 import type { ResponseApi } from "../interfaces/ResponseApi";
 import type { NewGoalData } from "../pages/Goals";
+import type { Goal } from "../types/Goal";
 import { getMessageError } from "../utils/getMessageError";
 import api from "./api";
 
@@ -11,6 +12,25 @@ export const goal = {
 
         try {
             const response = await api.post("/goals/create", data);
+
+            return response.data;
+        } catch (error: unknown) {
+
+            const message = getMessageError(error);
+
+            return {
+                status: false,
+                message: message,
+                data: {}
+            };
+        }
+    },
+
+     async edit(data: Goal): Promise<ResponseApi>  
+    {
+
+        try {
+            const response = await api.post("/goals/edit", data);
 
             return response.data;
         } catch (error: unknown) {
