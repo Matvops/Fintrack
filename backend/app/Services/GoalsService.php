@@ -30,8 +30,8 @@ class GoalsService {
 
             if(!isset($user)) throw new ValidationException('Erro ao criar meta', 404);
 
-            $balance = preg_replace('/[^0-9.]/', '', str_replace('.', '', str_replace(',', '.', $data['balance'])));
-            $balanceTarget = preg_replace('/[^0-9.]/', '', str_replace('.', '', str_replace(',', '.', $data['balanceTarget'])));
+            $balance = preg_replace('/[^0-9.]/', '', str_replace(',', '.', str_replace('.', '', $data['balance'])));
+            $balanceTarget = preg_replace('/[^0-9.]/', '', str_replace(',', '.', str_replace('.', '', $data['balanceTarget'])));
 
             $goal = new Goal();
             $goal->gls_use_id = $user->use_id;
@@ -72,6 +72,6 @@ class GoalsService {
     }
 
     private function getPercentage($goal) {
-        return $goal->gls_balance / $goal->gls_balance_target * 100;
+        return floor($goal->gls_balance / $goal->gls_balance_target * 100);
     } 
 }
