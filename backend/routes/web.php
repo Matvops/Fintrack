@@ -12,3 +12,4 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/goals/create', [GoalsController::class, 'create']);
 Route::post('/goals/edit', [GoalsController::class, 'edit']);
 Route::post('/goals/get', [GoalsController::class, 'getGoals']);
+Route::post('/goals/delete', [GoalsController::class, 'delete']);
