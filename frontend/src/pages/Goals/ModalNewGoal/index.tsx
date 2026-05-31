@@ -8,6 +8,7 @@ import { Colors } from '../../../components/Colors';
 import type { MainColor } from '../../../types/MainColor';
 import type { NewGoalData } from '..';
 import { UserContext } from '../../../contexts/UserContext';
+import { formatToReal } from '../../../utils/formatToReal';
 
 type ModalNewGoalProps = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -24,19 +25,6 @@ export function ModalNewGoal({ setVisible, cadastrar }: ModalNewGoalProps) {
   const [id] = useState(user.id);
   
 
-  const formatarParaReal = (valor: string): string => {
-    // Remove tudo que não for dígito
-    const apenasNumeros = valor.replace(/\D/g, '');
-
-    // Transforma em centavos (ex: "150" vira 1.50)
-    const valorNumerico = Number(apenasNumeros) / 100;
-
-    // Formata usando o Intl
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(valorNumerico);
-  };
 
   return (
     <div className={style.modalBackground}>
@@ -64,7 +52,7 @@ export function ModalNewGoal({ setVisible, cadastrar }: ModalNewGoalProps) {
               label='VALOR ATUAL (R$)'
               placeholder='0'
               type='text'
-              onChange={e => setBalance(formatarParaReal(e.target.value))}
+              onChange={e => setBalance(formatToReal(e.target.value))}
               value={balance}
             />
 
@@ -72,7 +60,7 @@ export function ModalNewGoal({ setVisible, cadastrar }: ModalNewGoalProps) {
               label='OBJETIVO (R$)'
               placeholder='0'
               type='text'
-              onChange={e => setBalanceTarget(formatarParaReal(e.target.value))}
+              onChange={e => setBalanceTarget(formatToReal(e.target.value))}
               value={balanceTarget}
             />
           </div>

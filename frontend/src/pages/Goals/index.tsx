@@ -1,13 +1,15 @@
-import { Pencil, PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { ButtonVisibleData } from '../../components/ButtonVisibleData';
 import { Heading } from '../../components/Heading';
 import { MainTemplate } from '../../templates/MainTemplate';
 import style from './style.module.css';
 import { ModalNewGoal } from './ModalNewGoal';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { MainColor } from '../../types/MainColor';
-import { goals } from '../../services/goals';
 import { message } from '../../adapters/message';
+import { goal } from '../../services/goal';
+import { UserContext } from '../../contexts/UserContext';
+import { GoalsList } from '../../components/GoalsList';
 
 export type NewGoalData = {
   id: number|null,
@@ -19,11 +21,13 @@ export type NewGoalData = {
 
 export function Goals() {
 
+  const { user } = useContext(UserContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const [goals, setGoals] = useState([]);
 
   async function cadastrar(data: NewGoalData, event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
-    const response = await goals.create(data);
+    const response = await goal.create(data);
 
     if (response.status) {
       message.success(response.message);
@@ -33,6 +37,22 @@ export function Goals() {
 
     message.error(response.message);
   }
+
+  useEffect(() => {
+    const response = goal.get(user.id);
+
+    message.dismiss();
+
+
+    response.then(data => {
+      if(data.message) {
+        message.success(data.message);
+        setGoals(data.data);
+      } else {
+        message.error(data.message);
+      }
+    })
+  }, [user.id]);
 
   return (
     <MainTemplate>
@@ -46,7 +66,7 @@ export function Goals() {
 
         <section className={style.headerSection}>
           <div className={style.textHeaderSection}>
-            <p>0 metas cadastradas</p>
+            <p>{goals.length} metas cadastradas</p>
           </div>
 
           <div onClick={() => setModalVisible(prevState => !prevState)}>
@@ -54,85 +74,9 @@ export function Goals() {
           </div>
         </section>
 
-        <main className={style.goalsList}>
-          <div className={style.card}>
-            <div className={style.headerCard}>
-
-              <div>
-                <h2 className={style.headerTitle}>Reserva de Emergência</h2>
-                <span className={style.headerSubTitle}>57% concluído</span>
-              </div>
-
-              <div className={style.cardValues}>
-                <div>
-                  <h2 className={style.headerTitle}>R$ 8.500,00</h2>
-                  <span className={style.headerSubTitle}>de R$ 15.000,00</span>
-                </div>
-                <button className={style.buttonEdit}>
-                  <Pencil /> Editar
-                </button>
-              </div>
-            </div>
-
-            <progress className={style.progressBar} value={0.2} />
-
-            <div>
-              <span className={style.headerSubTitle}>Faltam R$ 6.500,00 para a meta</span>
-            </div>
-          </div>
-
-          <div className={style.card}>
-            <div className={style.headerCard}>
-
-              <div>
-                <h2 className={style.headerTitle}>Reserva de Emergência</h2>
-                <span className={style.headerSubTitle}>57% concluído</span>
-              </div>
-
-              <div className={style.cardValues}>
-                <div>
-                  <h2 className={style.headerTitle}>R$ 8.500,00</h2>
-                  <span className={style.headerSubTitle}>de R$ 15.000,00</span>
-                </div>
-                <button className={style.buttonEdit}>
-                  <Pencil /> Editar
-                </button>
-              </div>
-            </div>
-
-            <progress className={style.progressBar} value={0.57} />
-
-            <div>
-              <span className={style.headerSubTitle}>Faltam R$ 6.500,00 para a meta</span>
-            </div>
-          </div>
-
-          <div className={style.card}>
-            <div className={style.headerCard}>
-
-              <div>
-                <h2 className={style.headerTitle}>Reserva de Emergência</h2>
-                <span className={style.headerSubTitle}>57% concluído</span>
-              </div>
-
-              <div className={style.cardValues}>
-                <div>
-                  <h2 className={style.headerTitle}>R$ 8.500,00</h2>
-                  <span className={style.headerSubTitle}>de R$ 15.000,00</span>
-                </div>
-                <button className={style.buttonEdit}>
-                  <Pencil /> Editar
-                </button>
-              </div>
-            </div>
-
-            <progress className={style.progressBar} value={0.5} />
-
-            <div>
-              <span className={style.headerSubTitle}>Faltam R$ 6.500,00 para a meta</span>
-            </div>
-          </div>
-        </main>
+      <GoalsList
+        goals={goals}
+      />
 
         {modalVisible && (
           <ModalNewGoal
