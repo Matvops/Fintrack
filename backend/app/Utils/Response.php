@@ -2,14 +2,16 @@
 
 namespace App\Utils;
 
+use Illuminate\Database\Eloquent\Collection;
+
 class Response {
 
     private string|null $message = null; 
-    private array|null $data = null; 
+    private array|Collection|null $data = null; 
     private bool $status; 
     private int|null $code = null; 
 
-    private function __construct(bool $status, ?string $message, ?array $data, ?int $code) {
+    private function __construct(bool $status, ?string $message, array|Collection|null $data, ?int $code) {
         $this->status = $status;
         $this->message = $message;
         $this->data = $data;
@@ -18,7 +20,7 @@ class Response {
 
     private function __clone() {}
 
-    public static function getResponse(bool $status, ?string $message = null, ?array $data = null, ?int $code = null) {
+    public static function getResponse(bool $status, ?string $message = null, array|Collection|null $data = null, ?int $code = null) {
         return new Response($status, $message, $data, $code);
     }
 
@@ -32,7 +34,7 @@ class Response {
         return $this->status;
     }
 
-    public function getData(): ?array
+    public function getData(): array|Collection|null
     {
         return $this->data;
     }
