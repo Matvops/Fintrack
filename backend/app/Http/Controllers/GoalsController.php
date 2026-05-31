@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Goals\CreateRequest;
+use App\Http\Requests\Goals\DeleteRequest;
 use App\Http\Requests\Goals\EditRequest;
 use App\Http\Requests\Goals\GetGoalsRequest;
 use App\Services\GoalsService;
 
-class GoalsController extends Controller {
+class GoalsController extends Controller
+{
 
     private GoalsService $service;
 
@@ -16,7 +18,8 @@ class GoalsController extends Controller {
         $this->service = $service;
     }
 
-    public function create(CreateRequest $request) {
+    public function create(CreateRequest $request)
+    {
 
         $data = [
             'id' => $request->input('id'),
@@ -31,7 +34,8 @@ class GoalsController extends Controller {
         return $this->sendResponse($response);
     }
 
-    public function getGoals(GetGoalsRequest $request) {
+    public function getGoals(GetGoalsRequest $request)
+    {
 
         $id = $request->input('id');
 
@@ -40,7 +44,8 @@ class GoalsController extends Controller {
         return $this->sendResponse($response);
     }
 
-    public function edit(EditRequest $request) {
+    public function edit(EditRequest $request)
+    {
 
         $dados = [
             'gls_id' => $request->input('gls_id'),
@@ -51,6 +56,16 @@ class GoalsController extends Controller {
         ];
 
         $response = $this->service->edit($dados);
+
+        return $this->sendResponse($response);
+    }
+
+    public function delete(DeleteRequest $request)
+    {
+
+        $id = $request->input('id');
+
+        $response = $this->service->delete($id);
 
         return $this->sendResponse($response);
     }
