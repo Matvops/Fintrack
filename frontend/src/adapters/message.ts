@@ -19,7 +19,7 @@ export class message {
         toast.warning(message);
     }
 
-    static dismiss(message: string) {
-        toast.dismiss(message);
+    static dismiss() {
+        toast.dismiss();
     }
 }
