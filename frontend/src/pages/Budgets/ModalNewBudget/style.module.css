@@ -1,0 +1,60 @@
+.modalBackground {
+    background-color: rgba(0, 0, 0, .3);
+    height: 99.6vh;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    box-sizing: border-box;
+    width: 42rem;
+    height: 32rem;
+    background-color: var(--background-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 2rem 2rem;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+}
+
+.closeIcon {
+    cursor: pointer;
+}
+
+.form {
+    margin: 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.headerColor {
+    color: var(--text-tertiary);
+    padding-bottom: 1rem;
+}
+
+.buttonHeaderSection {
+    display: flex;
+    align-items: center;
+    background-color: var(--ambar);
+    padding: .6rem 1.2rem;
+    border-radius: .2rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 1rem;
+    margin-left: auto;
+}
+
+.buttonHeaderSection svg {
+    width: 1rem;
+    height: 1rem;
+    padding-right: .4rem;
+}
