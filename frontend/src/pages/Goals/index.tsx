@@ -10,6 +10,8 @@ import { message } from '../../adapters/message';
 import { goal } from '../../services/goal';
 import { UserContext } from '../../contexts/UserContext';
 import { GoalsList } from '../../components/GoalsList';
+import { ModalEditGoal } from './ModalEditGoal';
+import type { Goal } from '../../types/Goal';
 
 export type NewGoalData = {
   id: number|null,
@@ -23,7 +25,9 @@ export function Goals() {
 
   const { user } = useContext(UserContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalEditVisible, setModalEditVisible] = useState(false);
   const [goals, setGoals] = useState([]);
+  const [selectedGoal, setSelectedGoal] = useState<Goal>();
 
   async function cadastrar(data: NewGoalData, event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -32,6 +36,20 @@ export function Goals() {
     if (response.status) {
       message.success(response.message);
       setModalVisible(false);
+      getGoals();
+      return;
+    }
+
+    message.error(response.message);
+  }
+
+  async function editar(data: Goal, event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const response = await goal.edit(data);
+
+    if (response.status) {
+      message.success(response.message);
+      setModalEditVisible(false);
       getGoals();
       return;
     }
@@ -81,12 +99,22 @@ export function Goals() {
 
       <GoalsList
         goals={goals}
+        setSelectedGoal={setSelectedGoal}
+        setModalEditVisible={setModalEditVisible}
       />
 
         {modalVisible && (
           <ModalNewGoal
             setVisible={setModalVisible}
             cadastrar={cadastrar}
+          />
+        )}
+
+        {modalEditVisible && selectedGoal && (
+          <ModalEditGoal
+            setVisible={setModalEditVisible}
+            editar={editar}
+            goal={selectedGoal}
           />
         )}
       </div>
