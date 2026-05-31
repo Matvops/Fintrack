@@ -1,0 +1,83 @@
+.modalBackground {
+    background-color: rgba(0, 0, 0, .3);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+}
+
+.modal {
+    box-sizing: border-box;
+    width: 42rem;
+    height: 32rem;
+    background-color: var(--background-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 2rem 2rem;
+    position: fixed;
+    top: 50;
+    left: 50;
+    transform: translate(65%, 50%);
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+}
+
+.closeIcon {
+    cursor: pointer;
+}
+
+.form {
+    margin: 4rem 0;
+}
+
+.saldos {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.colors {
+    margin-top: 2rem;
+}
+
+.headerColor {
+    color: var(--text-tertiary);
+    padding-bottom: 1rem;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.buttonHeaderSection {
+    display: flex;
+    align-items: center;
+    padding: .6rem 1.2rem;
+    border-radius: .2rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 2rem;
+}
+
+.buttonHeaderSection svg {
+    width: 1rem;
+    height: 1rem;
+    padding-right: .4rem;
+}
+
+.buttonSave {
+    background-color: var(--ambar);
+}
+
+.buttonCancel {
+    background-color: rgba(255, 0, 0, .08);
+    color: red;
+    border: .1rem solid rgba(255, 0, 0, .1);
+}
