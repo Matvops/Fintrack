@@ -57,6 +57,20 @@ export function Goals() {
     message.error(response.message);
   }
 
+  async function excluir(id: number, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    event.preventDefault();
+    const response = await goal.delete(id);
+
+    if (response.status) {
+      message.success(response.message);
+      setModalEditVisible(false);
+      getGoals();
+      return;
+    }
+
+    message.error(response.message);
+  }
+
   function getGoals() {
     const response = goal.get(user.id);
 
@@ -115,6 +129,7 @@ export function Goals() {
             setVisible={setModalEditVisible}
             editar={editar}
             goal={selectedGoal}
+            excluir={excluir}
           />
         )}
       </div>

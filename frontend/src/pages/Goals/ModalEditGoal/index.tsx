@@ -12,10 +12,11 @@ import type { Goal } from '../../../types/Goal';
 type ModalEditGoalProps = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
   editar: (data: Goal, event: React.SubmitEvent<HTMLFormElement>) => void,
+  excluir: (id: number, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
   goal: Goal
 }
 
-export function ModalEditGoal({ setVisible, editar, goal }: ModalEditGoalProps) {
+export function ModalEditGoal({ setVisible, editar, excluir, goal }: ModalEditGoalProps) {
 
   const [name, setName] = useState(goal.gls_name ?? '');
   const [balance, setBalance] = useState(formatToReal(goal.gls_balance ?? '0'));
@@ -85,7 +86,10 @@ export function ModalEditGoal({ setVisible, editar, goal }: ModalEditGoalProps) 
           </div>
 
           <div className={style.buttons}>
-            <button className={`${style.buttonHeaderSection} ${style.buttonCancel}`}><Trash /> Excluir</button>
+            <button type='button' className={`${style.buttonHeaderSection} ${style.buttonCancel}`} onClick={(e) => excluir(goal.gls_id, e)}
+            >
+              <Trash /> Excluir
+            </button>
             <button className={`${style.buttonHeaderSection} ${style.buttonSave}`}><Check /> Salvar</button>
           </div>
         </form>
