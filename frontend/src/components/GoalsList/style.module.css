@@ -1,0 +1,130 @@
+.goalsList {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.card {
+    background-color: var(--background-secondary);
+    border-radius: .8rem;
+    box-sizing: border-box;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.headerCard {
+    display: flex;
+    justify-content: space-between;
+}
+
+.headerTitle {
+    font-size: x-large;
+}
+
+.headerSubTitle {
+    color: var(--text-tertiary);
+    display: inline-block;
+    padding: .4rem 0;
+    font-size: small;
+
+}
+.cardValues {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.buttonEdit {
+    background-color: var(--background-tertiary);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .8rem;
+    border-radius: .2rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    transition-property: all;
+    transition-duration: 100ms;
+    transition-timing-function: ease-in;
+}
+
+.buttonEdit svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.buttonEdit:hover {
+    color: white;
+}
+
+.progressBar {
+    border-radius: .8rem;
+    background-color: var(--background-tertiary);
+    margin: 2rem 0 1rem;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.ambar {
+    color: var(--ambar);
+}
+
+.violeta {
+    color: var(--violeta);
+}
+
+.rosa {
+    color: var(--rosa);
+}
+
+.esmeralda {
+    color: var(--esmeralda);
+}
+
+.azul {
+    color: var(--azul);
+}
+
+.background-ambar::-moz-progress-bar {
+    background-color: var(--ambar) !important;
+}
+
+.background-ambar::-webkit-progress-bar {
+    background-color: var(--ambar) !important;
+}
+
+.background-violeta::-moz-progress-bar {
+    background-color: var(--violeta) !important;
+}
+
+.background-violeta::-webkit-progress-bar {
+    background-color: var(--violeta) !important;
+}
+
+.background-rosa::-moz-progress-bar {
+    background-color: var(--rosa) !important;
+}
+
+.background-rosa::-webkit-progress-bar {
+    background-color: var(--rosa) !important;
+}
+
+.background-azul::-moz-progress-bar {
+    background-color: var(--azul) !important;
+}
+
+.background-azul::-webkit-progress-bar {
+    background-color: var(--azul) !important;
+}
+
+.background-esmeralda::-moz-progress-bar {
+    background-color: var(--esmeralda) !important;
+}
+
+.background-esmeralda::-webkit-progress-bar {
+    background-color: var(--esmeralda) !important;
+}
