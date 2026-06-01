@@ -8,4 +8,9 @@ class Functions {
     {
         return preg_replace('/[^0-9.]/', '', str_replace(',', '.', str_replace('.', '', $value)));
     }
+
+    public static function getPercentage(float $part, float $base)
+    {
+        return floor($part / $base * 100);
+    }
 }
