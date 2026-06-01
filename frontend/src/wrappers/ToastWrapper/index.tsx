@@ -16,6 +16,8 @@ export function ToastWrapper({ children }: ToastWrapperProps) {
         theme="dark"
         transition={Zoom}
         draggable={false}
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
       />
     </>
   );
