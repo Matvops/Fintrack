@@ -21,7 +21,7 @@ Route::prefix('goals')->group(function() {
 
 Route::prefix('budgets')->group(function() {
     Route::post('/create', [BudgetsController::class, 'create']);
-    Route::post('/edit', [GoalsController::class, 'edit']);
-    Route::post('/get', [GoalsController::class, 'getBudgets']);
-    Route::post('/delete', [GoalsController::class, 'delete']);
+    Route::post('/edit', [BudgetsController::class, 'edit']);
+    Route::post('/get', [BudgetsController::class, 'getBudgets']);
+    Route::post('/delete', [BudgetsController::class, 'delete']);
 });
