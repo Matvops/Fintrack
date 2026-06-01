@@ -62,7 +62,7 @@ class GoalsService
             if (count($goals) < 1) throw new NotFoundException("Sem metas");
 
             foreach ($goals as $goal) {
-                $goal->percentage = $this->getPercentage($goal);
+                $goal->percentage = Functions::getPercentage((float) $goal->gls_balance, (float) $goal->gls_balance_target);
                 $goal->missing =  $goal->gls_balance_target - $goal->gls_balance;
             }
 
@@ -72,11 +72,6 @@ class GoalsService
         } catch (Exception $e) {
             return Response::getResponse(false, 'Metas não localizadas', code: 500);
         }
-    }
-
-    private function getPercentage($goal)
-    {
-        return floor($goal->gls_balance / $goal->gls_balance_target * 100);
     }
 
     public function edit(array $request): Response
