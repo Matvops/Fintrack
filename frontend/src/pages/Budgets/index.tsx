@@ -3,11 +3,13 @@ import { ButtonVisibleData } from "../../components/ButtonVisibleData";
 import { Heading } from "../../components/Heading";
 import { MainTemplate } from "../../templates/MainTemplate";
 import style from './style.module.css';
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ModalNewBudget } from "./ModalNewBudget";
 import type { MainColor } from "../../types/MainColor";
 import { budget } from "../../services/budget";
 import { message } from "../../adapters/message";
+import { UserContext } from "../../contexts/UserContext";
+import { BudgetsList } from "../../components/BudgetsList";
 
 
 export type NewBudgetData = {
@@ -20,7 +22,10 @@ export type NewBudgetData = {
 
 export function Budgets() {
 
+  const { user } = useContext(UserContext);
+
   const [modalCreateVisible, setModalCreateVisible] = useState(false);
+  const [budgets, setBudgets] = useState([]);
 
   async function create(data: NewBudgetData, event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,12 +35,33 @@ export function Budgets() {
     if (response.status) {
       message.success(response.message);
       setModalCreateVisible(false);
+      getBudgets();
       return;
     }
 
     message.error(response.message);
 
   }
+
+  function getBudgets() {
+
+    const response = budget.get(user.id);
+
+    message.dismiss();
+
+    response.then(data => {
+      if (data.status) {
+        message.success(data.message);
+        setBudgets(data.data);
+      } else {
+        message.error(data.message);
+      }
+    })
+  }
+
+  useEffect(() => {
+    getBudgets();
+  }, [])
 
   return (
     <MainTemplate>
@@ -48,13 +74,17 @@ export function Budgets() {
 
         <section className={style.headerSection}>
           <div className={style.textHeaderSection}>
-            <p>0 categorias</p>
+            <p>{budgets.length} categorias</p>
           </div>
 
           <div onClick={() => setModalCreateVisible(true)}>
             <button className={style.buttonHeaderSection}><PlusIcon /> Novo orçamento</button>
           </div>
         </section>
+
+        <BudgetsList
+          budgets={budgets}
+        />
 
         {modalCreateVisible &&
           <ModalNewBudget
