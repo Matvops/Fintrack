@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Budgets\CreateRequest;
+use App\Http\Requests\Budgets\GetBudgetsRequest;
 use App\Services\BudgetsService;
 
 class BudgetsController extends Controller {
@@ -24,6 +25,15 @@ class BudgetsController extends Controller {
         ];
 
         $response = $this->service->create($dados);
+
+        return $this->sendResponse($response);
+    }
+
+    public function getBudgets(GetBudgetsRequest $request) {
+        
+        $id = $request->input('id');
+
+        $response = $this->service->get($id);
 
         return $this->sendResponse($response);
     }
