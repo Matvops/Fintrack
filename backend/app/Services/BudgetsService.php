@@ -8,6 +8,7 @@ use App\Repositories\BudgetRepository;
 use App\Utils\Functions;
 use App\Utils\Response;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class BudgetsService {
 
@@ -48,6 +49,46 @@ class BudgetsService {
             return Response::getResponse(true, 'Orçamentos encontrados', $budgets);
         } catch(Exception $e) {
             return Response::getResponse(false, 'Erro ao localizar orçamentos', code: $e->getCode());
+        }
+    }
+
+    public function delete(int $id): Response
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $budget = $this->budgetRepository->getBudgetById($id);
+            $budget->delete();
+
+            DB::commit();
+            return Response::getResponse(true, 'Orçamento excluído com sucesso');
+        } catch (NotFoundException $e) {
+            DB::rollBack();
+            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
+        } catch (Exception $e) {
+            DB::rollBack();
+            return Response::getResponse(false, 'Orçamento não localizado', code: 500);
+        }
+    }
+
+    public function edit(array $data): Response
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $budget = $this->budgetRepository->getBudgetById($data['bdt_id']);
+            $budget->bdt_name = $data['bdt_name'];
+            $budget->bdt_limit = Functions::formatValue($data['bdt_limit']);
+            $budget->bdt_color = strtoupper($data['bdt_color']);
+            $budget->save();
+
+            DB::commit();
+            return Response::getResponse(true, 'Orçamento editado com sucesso');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return Response::getResponse(false, 'Orçamento não localizado', code: 500);
         }
     }
 }
