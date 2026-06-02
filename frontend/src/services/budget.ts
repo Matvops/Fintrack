@@ -1,6 +1,6 @@
 import type { ResponseApi } from "../interfaces/ResponseApi";
 import type { NewBudgetData } from "../pages/Budgets";
-import type { Goal } from "../types/Goal";
+import type { Budget } from "../types/Budget";
 import { getMessageError } from "../utils/getMessageError";
 import api from "./api";
 
@@ -26,7 +26,7 @@ export const budget = {
         }
     },
 
-    async edit(data: Goal): Promise<ResponseApi>  
+    async edit(data: Budget): Promise<ResponseApi>  
     {
 
         try {
