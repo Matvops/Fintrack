@@ -10,6 +10,8 @@ import { budget } from "../../services/budget";
 import { message } from "../../adapters/message";
 import { UserContext } from "../../contexts/UserContext";
 import { BudgetsList } from "../../components/BudgetsList";
+import type { Budget } from "../../types/Budget";
+import { ModalEditBudget } from "./ModalEditBudget";
 
 
 export type NewBudgetData = {
@@ -25,7 +27,9 @@ export function Budgets() {
   const { user } = useContext(UserContext);
 
   const [modalCreateVisible, setModalCreateVisible] = useState(false);
+  const [modalEditVisible, setModalEditVisibile] = useState(false);
   const [budgets, setBudgets] = useState([]);
+  const [selectedBudget, setSelectedBudget] = useState<Budget>();
 
   async function create(data: NewBudgetData, event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,6 +39,36 @@ export function Budgets() {
     if (response.status) {
       message.success(response.message);
       setModalCreateVisible(false);
+      getBudgets();
+      return;
+    }
+
+    message.error(response.message);
+
+  }
+
+  async function excluir(id: number, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    event.preventDefault();
+    const response = await budget.delete(id);
+
+    if (response.status) {
+      message.success(response.message);
+      setModalEditVisibile(false);
+      getBudgets();
+      return;
+    }
+
+    message.error(response.message);
+  }
+
+  async function edit(data: Budget, event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const response = await budget.edit(data);
+
+    if (response.status) {
+      message.success(response.message);
+      setModalEditVisibile(false);
       getBudgets();
       return;
     }
@@ -84,12 +118,23 @@ export function Budgets() {
 
         <BudgetsList
           budgets={budgets}
+          setBudget={setSelectedBudget}
+          setModalVisible={setModalEditVisibile}
         />
 
         {modalCreateVisible &&
           <ModalNewBudget
             setVisible={setModalCreateVisible}
             create={create}
+          />
+        }
+
+        {modalEditVisible && selectedBudget &&
+          <ModalEditBudget
+            budget={selectedBudget}
+            setVisible={setModalEditVisibile}
+            edit={edit}
+            excluir={excluir}
           />
         }
 
