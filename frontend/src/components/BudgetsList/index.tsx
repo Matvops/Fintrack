@@ -4,10 +4,12 @@ import type { Budget } from '../../types/Budget';
 import { formatToReal } from '../../utils/formatToReal';
 
 type BudgetsListProps = {
-  budgets: Budget[]
+  budgets: Budget[],
+  setBudget: React.Dispatch<React.SetStateAction<Budget | undefined>>
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function BudgetsList({ budgets }: BudgetsListProps) {
+export function BudgetsList({ budgets, setBudget, setModalVisible }: BudgetsListProps) {
 
   const get = () => {
 
@@ -21,7 +23,10 @@ export function BudgetsList({ budgets }: BudgetsListProps) {
             <div>
               <span className={style.headerSubTitle}>R$ 515,00 / {formatToReal(budget.bdt_limit.toString())}</span>
             </div>
-            <button className={style.buttonEdit} onClick={() => { }}>
+            <button className={style.buttonEdit} onClick={() => {
+              setBudget(budget);
+              setModalVisible(true);
+            }}>
               <Pencil /> Editar
             </button>
           </div>
