@@ -3,6 +3,7 @@ import { Login } from "../../pages/Login";
 import { Home } from "../../pages/Home";
 import { Goals } from "../../pages/Goals";
 import { Budgets } from "../../pages/Budgets";
+import { Transactions } from "../../pages/Transactions";
 
 
 
@@ -30,6 +31,11 @@ export function MainRouter() {
           <Route
             path="/budgets"
             element={<Budgets />}
+          />
+
+          <Route
+            path="/transactions"
+            element={<Transactions />}
           />
 
         </Routes>
