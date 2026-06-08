@@ -13,14 +13,17 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id('tra_id')->autoIncrement();
-            $table->string('tra_descricacao');
+            $table->foreignId('tra_use_id')
+                    ->references('use_id')
+                    ->on('users');
             $table->foreignId('tra_bdt_id')
                     ->nullable()
                     ->references('bdt_id')
                     ->on('budgets');
+            $table->string('tra_description');
             $table->decimal('tra_value', 10, 2);
             $table->timestamp('tra_date');
-            $table->enum('tra_type', ['expense', 'income']);
+            $table->enum('tra_type', ['EXPENSE', 'INCOME']);
             $table->timestamps();
         });
     }
