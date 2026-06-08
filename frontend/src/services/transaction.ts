@@ -8,7 +8,6 @@ export const transaction = {
     async create (data: NewTransationData){
 
         try {
-            console.log(data);
             const response = await api.post("/transactions/create", data);
 
             return response.data;
