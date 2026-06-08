@@ -12,6 +12,7 @@ class Transaction extends Model
 
     public $fillable = [
         'tra_id',
+        'tra_use_id',
         'tra_bdt_id',
         'tra_descricao',
         'tra_value',
@@ -24,5 +25,10 @@ class Transaction extends Model
     public function budget()
     {
         return $this->belongsTo(Budget::class, 'tra_bdt_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'tra_use_id');
     }
 }

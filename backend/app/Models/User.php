@@ -38,4 +38,8 @@ class User extends AuthUser
     public function budgets() {
         return $this->hasMany(Budget::class, 'bdt_use_id');
     }
+
+    public function transactions() {
+        return $this->hasMany(Transaction::class, 'tra_use_id');
+    }
 }
