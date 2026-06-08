@@ -10,20 +10,23 @@ import { maskDate } from "../../../utils/maskDate";
 import { formatToReal } from "../../../utils/formatToReal";
 import type { Budget } from "../../../types/Budget";
 import { DropdownGeneric } from "../../../components/DropdownGeneric";
+import type { TransactionType } from "../../../types/TransactionType";
+import type { NewTransationData } from "..";
 
 type ModalNewTransaction = {
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>,
+  create: (data: NewTransationData, e: React.SubmitEvent<HTMLFormElement>) => void
 };
 
 type Category = {
   label: string,
-  value: number
+  value: number,
 };
 
-export function ModalNewTransaction({ setVisible }: ModalNewTransaction) {
+export function ModalNewTransaction({ setVisible, create }: ModalNewTransaction) {
 
   const { user } = useContext(UserContext);
-  const [typeForm, setTypeForm] = useState<'expense' | 'income'>('expense')
+  const [typeForm, setTypeForm] = useState<TransactionType>('expense')
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [category, setCategory] = useState<Category>();
@@ -92,7 +95,7 @@ export function ModalNewTransaction({ setVisible }: ModalNewTransaction) {
         </div>
 
 
-        <form className={style.form} onSubmit={(e) => setVisible(prevState => !prevState)}>
+        <form className={style.form} onSubmit={(e) => create({category: category?.value, id: user.id, date: date, type: typeForm, description: description, value: value}, e)}>
 
           <InputDefault
             label='DESCRIÇÃO'
@@ -134,7 +137,7 @@ export function ModalNewTransaction({ setVisible }: ModalNewTransaction) {
           </div>
 
           <div>
-            <button type="button" className={style.buttonHeaderSection}><Check /> Salvar</button>
+            <button className={style.buttonHeaderSection}><Check /> Salvar</button>
           </div>
         </form>
 
