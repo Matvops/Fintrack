@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BudgetsController;
 use App\Http\Controllers\GoalsController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,4 +25,11 @@ Route::prefix('budgets')->group(function() {
     Route::post('/edit', [BudgetsController::class, 'edit']);
     Route::post('/get', [BudgetsController::class, 'getBudgets']);
     Route::post('/delete', [BudgetsController::class, 'delete']);
+});
+
+Route::prefix('transactions')->group(function() {
+    Route::post('/create', [TransactionController::class, 'create']);
+    Route::post('/edit', [TransactionController::class, 'edit']);
+    Route::post('/get', [TransactionController::class, 'getBudgets']);
+    Route::post('/delete', [TransactionController::class, 'delete']);
 });
