@@ -41,7 +41,7 @@ export function DropdownGeneric({ values, selectedValue, setSelectedValue, title
 
         {title && <label className={style.title}>{title?.toUpperCase()}</label>}
 
-        <select className={style.select} onChange={(e) => handleValue(e.target.value)} {...props}>
+        <select defaultValue={-1} className={style.select} onChange={(e) => handleValue(e.target.value)} {...props}>
 
           {selectedValue ? 
             <option value={-1}>{defaultLabel ?? 'Selecione'}</option> 
