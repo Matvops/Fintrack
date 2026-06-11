@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Transactions\CreateTransactionRequest;
+use App\Http\Requests\Transactions\GetTransactionsRequest;
 use App\Services\TransactionService;
-use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
@@ -27,6 +27,15 @@ class TransactionController extends Controller
         ];
 
         $response = $this->service->create($data);
+
+        return $this->sendResponse($response);
+    }
+
+    public function getTransactions(GetTransactionsRequest $request) {
+
+        $id = $request->input('id');
+
+        $response = $this->service->getByUseId($id);
 
         return $this->sendResponse($response);
     }
