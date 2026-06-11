@@ -42,7 +42,6 @@ export function ModalNewTransaction({ setVisible, create }: ModalNewTransaction)
 
     response.then(data => {
       if (data.status) {
-        message.success(data.message);
         setBudgets(data.data);
       } else {
         message.error(data.message);
