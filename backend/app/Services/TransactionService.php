@@ -45,7 +45,7 @@ class TransactionService
     {
         try {
 
-            $transactions = $this->transactionRepository->getBudgetsByUseId($id);
+            $transactions = $this->transactionRepository->getTransactionsByUseId($id);
 
             if (count($transactions) < 1) throw new NotFoundException("Sem Transações");
 
