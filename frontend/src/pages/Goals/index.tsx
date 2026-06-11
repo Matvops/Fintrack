@@ -78,7 +78,7 @@ export function Goals() {
 
 
     response.then(data => {
-      if(data.message) {
+      if(data.status) {
         message.success(data.message);
         setGoals(data.data);
       } else {
