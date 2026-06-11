@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\NotFoundException;
 use App\Models\Budget;
 use App\Repositories\BudgetRepository;
+use App\Repositories\TransactionRepository;
 use App\Utils\Functions;
 use App\Utils\Response;
 use Exception;
@@ -13,10 +14,12 @@ use Illuminate\Support\Facades\DB;
 class BudgetsService {
 
     private BudgetRepository $budgetRepository;
+    private TransactionRepository $transactionRepository;
 
-    public function __construct(BudgetRepository $budgetRepository)
+    public function __construct(BudgetRepository $budgetRepository, TransactionRepository $transactionRepository)
     {
         $this->budgetRepository = $budgetRepository;
+        $this->transactionRepository = $transactionRepository;
     }
 
 
@@ -45,6 +48,14 @@ class BudgetsService {
             $budgets = $this->budgetRepository->getBudgetsByUseId($id);
 
             if (count($budgets) < 1) throw new NotFoundException("Sem Orçamentos");
+
+            foreach($budgets as $budget) {
+                $transactions = $this->transactionRepository->getTransactionsByBudgetId($budget->bdt_id)->toArray();
+                $budget->bdt_transactions = $transactions;
+                $budget->bdt_amount_spent = strval(array_reduce($transactions, fn ($carry, $item) => $carry + $item['tra_value'], 0));
+                $budget->bdt_remaining_value = strval($budget->bdt_limit - $budget->bdt_amount_spent);
+                $budget->bdt_percentage = Functions::getPercentage($budget->bdt_amount_spent, $budget->bdt_limit);
+            }
 
             return Response::getResponse(true, 'Orçamentos encontrados', $budgets);
         } catch(Exception $e) {
