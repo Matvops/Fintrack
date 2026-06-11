@@ -13,33 +13,38 @@ export function BudgetsList({ budgets, setBudget, setModalVisible }: BudgetsList
 
   const get = () => {
 
-    return budgets.map((budget, index) => (
-      <div className={style.card} key={index}>
-        <div className={style.headerCard}>
+    return budgets.map((budget, index) => {
 
-          <h2 className={style.headerTitle}>{budget.bdt_name}</h2>
+      const percentage = budget.bdt_percentage ? budget.bdt_percentage / 100 : 0;
 
-          <div className={style.cardValues}>
-            <div>
-              <span className={style.headerSubTitle}>R$ 515,00 / {formatToReal(budget.bdt_limit.toString())}</span>
+      return (
+        <div className={style.card} key={index}>
+          <div className={style.headerCard}>
+
+            <h2 className={style.headerTitle}>{budget.bdt_name}</h2>
+
+            <div className={style.cardValues}>
+              <div>
+                <span className={style.headerSubTitle}>{formatToReal(budget.bdt_amount_spent ?? '')} / {formatToReal(budget.bdt_limit.toString())}</span>
+              </div>
+              <button className={style.buttonEdit} onClick={() => {
+                setBudget(budget);
+                setModalVisible(true);
+              }}>
+                <Pencil /> Editar
+              </button>
             </div>
-            <button className={style.buttonEdit} onClick={() => {
-              setBudget(budget);
-              setModalVisible(true);
-            }}>
-              <Pencil /> Editar
-            </button>
+          </div>
+
+          <progress className={`${style.progressBar} ${style['background-' + budget.bdt_color.toLowerCase()]}`} value={percentage} />
+
+          <div className={style.footerCard}>
+            <span className={style.headerSubTitle}>Restam {formatToReal(budget.bdt_remaining_value ?? '')}</span>
+            <span className={`${style.percentage} ${style[budget.bdt_color.toLowerCase()]}`}>{budget.bdt_percentage}%</span>
           </div>
         </div>
-
-        <progress className={`${style.progressBar} ${style['background-' + budget.bdt_color.toLowerCase()]}`} value={0.74} />
-
-        <div className={style.footerCard}>
-          <span className={style.headerSubTitle}>Restam R$ 185,00</span>
-          <span className={`${style.percentage} ${style[budget.bdt_color.toLowerCase()]}`}>74%</span>
-        </div>
-      </div>
-    ));
+      )
+    });
 
   };
 
