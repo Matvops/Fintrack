@@ -30,6 +30,6 @@ Route::prefix('budgets')->group(function() {
 Route::prefix('transactions')->group(function() {
     Route::post('/create', [TransactionController::class, 'create']);
     Route::post('/edit', [TransactionController::class, 'edit']);
-    Route::post('/get', [TransactionController::class, 'getBudgets']);
+    Route::post('/get', [TransactionController::class, 'getTransactions']);
     Route::post('/delete', [TransactionController::class, 'delete']);
 });
