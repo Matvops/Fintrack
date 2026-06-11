@@ -15,7 +15,7 @@ export function GoalsList({ goals, setSelectedGoal, setModalEditVisible }: Goals
 
     if(goals.length === 0) return;
     
-    return goals.map((goal, index) => (
+    return goals?.map((goal, index) => (
       <div className={style.card} key={goal.gls_id + `-${index}`}>
         <div className={style.headerCard}>
 
@@ -45,7 +45,7 @@ export function GoalsList({ goals, setSelectedGoal, setModalEditVisible }: Goals
           <span className={style.headerSubTitle}>Faltam {formatToReal(goal.missing?.toString() ?? '0')} para a meta</span>
         </div>
       </div>
-    ));
+    )) || [];
 
   }
 
