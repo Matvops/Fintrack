@@ -10,6 +10,10 @@ class Transaction extends Model
     public $primaryKey = 'tra_id';
     public $timestamps = true;
 
+    protected $casts = [
+        'tra_date' => 'date:m/Y',
+    ];
+
     public $fillable = [
         'tra_id',
         'tra_use_id',
