@@ -68,9 +68,9 @@ class GoalsService
 
             return Response::getResponse(true, 'Metas encontradas', $goals);
         } catch (NotFoundException $e) {
-            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
+            return Response::getResponse(false, $e->getMessage(), [], code: $e->getCode());
         } catch (Exception $e) {
-            return Response::getResponse(false, 'Metas não localizadas', code: 500);
+            return Response::getResponse(false, 'Metas não localizadas', [], code: 500);
         }
     }
 
