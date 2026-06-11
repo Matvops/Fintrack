@@ -21,6 +21,23 @@ export const transaction = {
                 data: {}
             };
         }
-    }
+    },
 
+    async get (id: number){
+
+        try {
+            const response = await api.post("/transactions/get", {id});
+
+            return response.data;
+        } catch (error: unknown) {
+
+            const message = getMessageError(error);
+
+            return {
+                status: false,
+                message: message,
+                data: {}
+            };
+        }
+    }
 }
