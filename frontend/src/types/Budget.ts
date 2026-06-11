@@ -7,5 +7,8 @@ export interface Budget {
     bdt_limit: number|string,
     bdt_color: MainColor,
     create_at?: string|number,
-    updated_at?: string|number
+    updated_at?: string|number,
+    bdt_amount_spent?: string,
+    bdt_remaining_value?: string,
+    bdt_percentage?: number
 }
