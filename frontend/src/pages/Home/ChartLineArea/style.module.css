@@ -1,0 +1,9 @@
+.chart {
+    width: 90%;
+    max-width: 50rem;
+    max-height: 30vh;
+    aspect-ratio: 1.618;
+    margin: auto;
+    box-sizing: border-box;
+    margin-top: 2rem;
+}
