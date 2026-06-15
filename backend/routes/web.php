@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BudgetsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoalsController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
@@ -32,4 +33,8 @@ Route::prefix('transactions')->group(function() {
     Route::post('/edit', [TransactionController::class, 'edit']);
     Route::post('/get', [TransactionController::class, 'getTransactions']);
     Route::post('/delete', [TransactionController::class, 'delete']);
+});
+
+Route::prefix('dashboard')->group(function() {
+    Route::post('/get', [DashboardController::class, 'get']);
 });
