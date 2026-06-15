@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Area, AreaChart, Legend, Tooltip, XAxis, YAxis, type DataKey, type LegendPayload } from "recharts";
 import type { ValuesPeerDataDashboard } from "../../../types/ValuesPeerDataDashboard";
 import { formatToReal } from "../../../utils/formatToReal";
+import style from './style.module.css';
 
 type ChartLineData = {
   data: ValuesPeerDataDashboard[] | undefined
@@ -31,7 +32,7 @@ export function ChartLineArea({ data }: ChartLineData) {
 
   return (
     <AreaChart
-      style={{ width: '90%', maxWidth: '50rem', maxHeight: '30vh', aspectRatio: 1.618, margin: 'auto', boxSizing: 'border-box', marginTop: '2rem' }}
+      className={style.chart}
       responsive
       data={Object.values(data ?? [])}
     >
