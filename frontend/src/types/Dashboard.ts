@@ -1,3 +1,4 @@
+import type { ValuesPeerBudgetDashboard } from "./ValuesPeerBudgetDashboard";
 import type { ValuesPeerDataDashboard } from "./ValuesPeerDataDashboard";
 
 export interface Dashboard {
@@ -5,5 +6,5 @@ export interface Dashboard {
     expense: string,
     balance: string,
     peerMonths: ValuesPeerDataDashboard[],
-    peerBudgets?: []
+    peerBudgets: ValuesPeerBudgetDashboard[]
 }
