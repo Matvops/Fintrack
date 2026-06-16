@@ -36,10 +36,6 @@ export function Home() {
     getData();
   }, []);
 
-  useEffect(() => {
-    console.log(dashboardData);
-  }, [dashboardData]);
-
   return (
     <MainTemplate>
       <div className={style.page}>
