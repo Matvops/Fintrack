@@ -58,7 +58,7 @@ export function ChartLineArea({ data }: ChartLineData) {
         tickLine={false}
         axisLine={false}
         tickMargin={12}
-        domain={[0, 1000]}
+        domain={[0, 10000]}
       />
       <Tooltip
         formatter={(e) => `${formatToReal(e?.toString() ?? '')}`}
