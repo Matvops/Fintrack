@@ -10,7 +10,7 @@ type MainTemplate = {
   displayDate: boolean
 }
 
-export function MainTemplate({ children, title, displayDate }: MainTemplate) {
+export function MainTemplate({ children, title, displayDate = true }: MainTemplate) {
 
   return (
     <>
