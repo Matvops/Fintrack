@@ -4,6 +4,7 @@ import { Home } from "../../pages/Home";
 import { Goals } from "../../pages/Goals";
 import { Budgets } from "../../pages/Budgets";
 import { Transactions } from "../../pages/Transactions";
+import { Settings } from "../../pages/Settings";
 
 
 
@@ -36,6 +37,11 @@ export function MainRouter() {
           <Route
             path="/transactions"
             element={<Transactions />}
+          />
+
+          <Route
+            path="/settings"
+            element={<Settings />}
           />
 
         </Routes>
