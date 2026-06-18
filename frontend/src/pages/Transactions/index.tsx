@@ -1,6 +1,4 @@
 import { ArrowDownRight, ArrowUpRight, PlusIcon } from "lucide-react";
-import { ButtonVisibleData } from "../../components/ButtonVisibleData";
-import { Heading } from "../../components/Heading";
 import { MainTemplate } from "../../templates/MainTemplate";
 import style from './style.module.css';
 import { useContext, useEffect, useState } from "react";
@@ -100,13 +98,7 @@ export function Transactions() {
   }
 
   return (
-    <MainTemplate>
-      <div className={style.body}>
-        <header className={style.header}>
-          <Heading text='Transações' />
-          <ButtonVisibleData />
-        </header>
-
+    <MainTemplate title="Transações">
         <main className={style.transactionsList}>
           <header className={style.headerList}>
             <h3>{transactions.length} lançamentos</h3>
@@ -126,7 +118,6 @@ export function Transactions() {
             setVisible={setModalVisible}
             create={create}
           />}
-      </div>
     </MainTemplate>
   )
 }

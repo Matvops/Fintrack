@@ -1,6 +1,4 @@
 import { PlusIcon } from "lucide-react";
-import { ButtonVisibleData } from "../../components/ButtonVisibleData";
-import { Heading } from "../../components/Heading";
 import { MainTemplate } from "../../templates/MainTemplate";
 import style from './style.module.css';
 import { useContext, useEffect, useState } from "react";
@@ -98,14 +96,7 @@ export function Budgets() {
   }, [])
 
   return (
-    <MainTemplate>
-      <div className={style.body}>
-        <header className={style.header}>
-          <Heading text='Orçamento' />
-
-          <ButtonVisibleData />
-        </header>
-
+    <MainTemplate title="Orçamentos">
         <section className={style.headerSection}>
           <div className={style.textHeaderSection}>
             <p>{budgets.length} categorias</p>
@@ -138,7 +129,6 @@ export function Budgets() {
           />
         }
 
-      </div>
     </MainTemplate>
   );
 }

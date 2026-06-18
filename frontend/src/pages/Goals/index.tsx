@@ -1,6 +1,4 @@
 import { PlusIcon } from 'lucide-react';
-import { ButtonVisibleData } from '../../components/ButtonVisibleData';
-import { Heading } from '../../components/Heading';
 import { MainTemplate } from '../../templates/MainTemplate';
 import style from './style.module.css';
 import { ModalNewGoal } from './ModalNewGoal';
@@ -92,15 +90,7 @@ export function Goals() {
   }, []);
 
   return (
-    <MainTemplate>
-
-      <div className={style.body}>
-        <header className={style.header}>
-          <Heading text='Metas' />
-
-          <ButtonVisibleData />
-        </header>
-
+    <MainTemplate title='Metas'>
         <section className={style.headerSection}>
           <div className={style.textHeaderSection}>
             <p>{goals.length} metas cadastradas</p>
@@ -132,7 +122,6 @@ export function Goals() {
             excluir={excluir}
           />
         )}
-      </div>
     </MainTemplate>
   );
 }

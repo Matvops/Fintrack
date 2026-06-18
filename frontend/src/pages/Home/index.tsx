@@ -1,7 +1,5 @@
 import style from './style.module.css';
-import { Heading } from '../../components/Heading';
 import { MainTemplate } from '../../templates/MainTemplate';
-import { ButtonVisibleData } from '../../components/ButtonVisibleData';
 import { ArrowDownRight, ArrowUpRight, ChartLine } from 'lucide-react';
 import { ChartLineArea } from './ChartLineArea';
 import { useContext, useEffect, useState } from 'react';
@@ -37,14 +35,7 @@ export function Home() {
   }, []);
 
   return (
-    <MainTemplate>
-      <div className={style.page}>
-        <header className={style.header}>
-          <Heading text='Dashboard' />
-
-          <ButtonVisibleData />
-        </header>
-
+    <MainTemplate title='Dashboard'>
         <div className={style.body}>
           <section className={style.cards}>
 
@@ -93,8 +84,6 @@ export function Home() {
             </div>
           </section>
         </div>
-
-      </div>
     </MainTemplate>
   );
 }

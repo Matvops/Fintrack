@@ -1,6 +1,4 @@
 import { useContext, useState } from "react";
-import { ButtonVisibleData } from "../../components/ButtonVisibleData";
-import { Heading } from "../../components/Heading";
 import { MainTemplate } from "../../templates/MainTemplate";
 import style from './style.module.css';
 import type { MainColor } from "../../types/MainColor";
@@ -25,13 +23,7 @@ export function Settings() {
   }
 
   return (
-    <MainTemplate>
-      <div className={style.body}>
-        <header className={style.header}>
-          <Heading text='Configurações' />
-          <ButtonVisibleData />
-        </header>
-
+    <MainTemplate title="Configurações">
         <main className={style.cards}>
           <section className={style.card}>
             <div className={style.colors}>
@@ -70,7 +62,6 @@ export function Settings() {
             </div>
           </section>
         </main>
-      </div>
     </MainTemplate>
   );
 }
