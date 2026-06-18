@@ -1,4 +1,5 @@
 import { ButtonVisibleData } from '../../components/ButtonVisibleData';
+import { DateSelector } from '../../components/DateSelector';
 import { Heading } from '../../components/Heading';
 import { Sidebar } from '../../components/Sidebar';
 import style from './style.module.css';
@@ -18,6 +19,7 @@ export function MainTemplate({ children, title }: MainTemplate) {
           <header className={style.header}>
             <div className={style.heading}>
               <Heading text={title} />
+              <DateSelector />
             </div>
             <ButtonVisibleData />
           </header>
