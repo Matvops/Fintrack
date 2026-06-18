@@ -7,7 +7,7 @@ import style from './style.module.css';
 type MainTemplate = {
   children: React.ReactNode,
   title: string,
-  displayDate: boolean
+  displayDate?: boolean
 }
 
 export function MainTemplate({ children, title, displayDate = true }: MainTemplate) {

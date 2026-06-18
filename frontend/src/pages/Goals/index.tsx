@@ -90,7 +90,7 @@ export function Goals() {
   }, []);
 
   return (
-    <MainTemplate title='Metas'>
+    <MainTemplate title='Metas' displayDate={false}>
         <section className={style.headerSection}>
           <div className={style.textHeaderSection}>
             <p>{goals.length} metas cadastradas</p>

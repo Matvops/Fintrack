@@ -23,7 +23,7 @@ export function Settings() {
   }
 
   return (
-    <MainTemplate title="Configurações">
+    <MainTemplate title="Configurações" displayDate={false}>
         <main className={style.cards}>
           <section className={style.card}>
             <div className={style.colors}>
