@@ -6,10 +6,11 @@ import style from './style.module.css';
 
 type MainTemplate = {
   children: React.ReactNode,
-  title: string
+  title: string,
+  displayDate: boolean
 }
 
-export function MainTemplate({ children, title }: MainTemplate) {
+export function MainTemplate({ children, title, displayDate }: MainTemplate) {
 
   return (
     <>
@@ -19,7 +20,7 @@ export function MainTemplate({ children, title }: MainTemplate) {
           <header className={style.header}>
             <div className={style.heading}>
               <Heading text={title} />
-              <DateSelector />
+              {displayDate && <DateSelector />}
             </div>
             <ButtonVisibleData />
           </header>
