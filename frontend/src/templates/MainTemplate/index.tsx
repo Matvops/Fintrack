@@ -16,7 +16,9 @@ export function MainTemplate({ children, title }: MainTemplate) {
         <Sidebar />
         <div className={style.body}>
           <header className={style.header}>
-            <Heading text={title} />
+            <div className={style.heading}>
+              <Heading text={title} />
+            </div>
             <ButtonVisibleData />
           </header>
           {children}

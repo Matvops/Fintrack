@@ -19,3 +19,8 @@
     display: flex;
     justify-content: space-between;
 }
+
+.heading {
+    display: flex;
+    gap: 1.6rem;
+}
