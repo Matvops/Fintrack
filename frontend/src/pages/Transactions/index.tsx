@@ -9,6 +9,7 @@ import { transaction } from "../../services/transaction";
 import { UserContext } from "../../contexts/UserContext";
 import type { Transaction } from "../../types/Transaction";
 import { formatToReal } from "../../utils/formatToReal";
+import { DateContext } from "../../contexts/DateContext";
 
 export type NewTransationData = {
   id: number | null,
@@ -23,6 +24,8 @@ export type NewTransationData = {
 export function Transactions() {
 
   const { user } = useContext(UserContext);
+  const { date } = useContext(DateContext);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
@@ -47,7 +50,9 @@ export function Transactions() {
 
       if (user.id === null) throw Error('ID inválido');
 
-      const response = transaction.get(user.id);
+      const dateSelected = new Date(date.date);
+
+      const response = transaction.get(user.id, dateSelected.getTime());
 
       message.dismiss();
 

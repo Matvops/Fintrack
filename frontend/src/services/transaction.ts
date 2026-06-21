@@ -23,10 +23,10 @@ export const transaction = {
         }
     },
 
-    async get (id: number){
+    async get (id: number, date: number){
 
         try {
-            const response = await api.post("/transactions/get", {id});
+            const response = await api.post("/transactions/get", {id, date});
 
             return response.data;
         } catch (error: unknown) {
