@@ -41,16 +41,19 @@ class BudgetsService {
         }
     }
 
-    public function get(int $id): Response
+    public function get(array $request): Response
     {
         try {
             
-            $budgets = $this->budgetRepository->getBudgetsByUseId($id);
+            $initialDate = Functions::getInitialDateOfMonth($request['date']);
+            $finishDate = Functions::getFinishDateOfMonth($request['date']);
+        
+            $budgets = $this->budgetRepository->getBudgetsByUseId($request['id'], $initialDate, $finishDate);
 
             if (count($budgets) < 1) throw new NotFoundException("Sem Orçamentos");
 
             foreach($budgets as $budget) {
-                $transactions = $this->transactionRepository->getTransactionsByBudgetId($budget->bdt_id)->toArray();
+                $transactions = $this->transactionRepository->getTransactionsByBudgetId($budget->bdt_id, $initialDate, $finishDate)->toArray();
                 $budget->bdt_transactions = $transactions;
                 $budget->bdt_amount_spent = strval(array_reduce($transactions, fn ($carry, $item) => $carry + $item['tra_value'], 0));
                 $budget->bdt_remaining_value = strval($budget->bdt_limit - $budget->bdt_amount_spent);
