@@ -6,9 +6,12 @@ import { DateContext } from '../../contexts/DateContext';
 export function DateSelector() {
 
   const { date, setDate } = useContext(DateContext);
+  const dateObj = new Date(date.date);
+  const actualDate = new Date();
 
   function alterMonth(action: 'previous' | 'next') {
-    const dateObj = new Date(date.date);
+
+    if(dateObj.toLocaleDateString() == actualDate.toLocaleDateString() && action === 'next') return;
 
     if(action === 'next') {
       dateObj.setMonth(dateObj.getMonth() + 1);
@@ -31,7 +34,7 @@ export function DateSelector() {
         <ArrowLeft />
       </button>
       <span className={style.month}>{date.formattedDate}</span>
-      <button type='button' className={style.button} onClick={() => alterMonth('next')}>
+      <button type='button' className={style.button} onClick={() => alterMonth('next')} disabled={dateObj.toLocaleDateString() == actualDate.toLocaleDateString()}>
         <ArrowRight />
       </button>
     </div>

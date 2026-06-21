@@ -19,6 +19,14 @@
     height: 1.2rem;
 }
 
+.button:disabled svg {
+    color: var(--text-quarternary);
+}
+
+.button:disabled {
+    cursor: auto;
+}
+
 .month {
     font-size: larger;
 }
