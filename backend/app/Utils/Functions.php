@@ -13,4 +13,16 @@ class Functions {
     {
         return floor($part / $base * 100);
     }
+
+    public static function getInitialDateOfMonth(string $date): string
+    {
+        $initialDate = date('Y-m-01 H:i:s', round($date / 1000));
+        return $initialDate;
+    }
+
+    public static function getFinishDateOfMonth(string $date): string
+    {
+        $finishDate = date('Y-m-t H:i:s', round($date / 1000));
+        return $finishDate;
+    }
 }
