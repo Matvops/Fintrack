@@ -24,6 +24,7 @@ class GetBudgetsRequest extends FormRequest
     {
         return [
             'id' => 'required|exists:users,use_id',
+            'date' => 'required'
         ];
     }
 
@@ -32,6 +33,7 @@ class GetBudgetsRequest extends FormRequest
         return [
             'id.required' => 'O id é obrigatório',
             'id.exists' => 'Erro ao listar orçamentos',
+            'date.required' => 'A data é obrigatória',
         ];
     }
 }
