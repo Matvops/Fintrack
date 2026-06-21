@@ -33,9 +33,12 @@ class BudgetsController extends Controller {
 
     public function getBudgets(GetBudgetsRequest $request) {
         
-        $id = $request->input('id');
+        $request = [
+            'id' => $request->input('id'),
+            'date' => $request->input('date')
+        ];
 
-        $response = $this->service->get($id);
+        $response = $this->service->get($request);
 
         return $this->sendResponse($response);
     }
