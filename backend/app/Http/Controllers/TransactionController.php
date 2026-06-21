@@ -33,9 +33,12 @@ class TransactionController extends Controller
 
     public function getTransactions(GetTransactionsRequest $request) {
 
-        $id = $request->input('id');
+        $request = [
+            'id' => $request->input('id'),
+            'date' => $request->input('date')
+        ];
 
-        $response = $this->service->getByUseId($id);
+        $response = $this->service->getByUseId($request);
 
         return $this->sendResponse($response);
     }
