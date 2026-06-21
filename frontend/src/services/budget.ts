@@ -64,11 +64,11 @@ export const budget = {
         }
     },
 
-    async get(id: number|null): Promise<ResponseApi> 
+    async get(id: number|null, date: number): Promise<ResponseApi> 
     {
 
         try {
-            const response = await api.post("/budgets/get", {id});
+            const response = await api.post("/budgets/get", {id, date});
 
             return response.data;
         } catch (error: unknown) {

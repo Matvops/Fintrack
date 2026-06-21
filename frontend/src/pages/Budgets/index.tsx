@@ -10,6 +10,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { BudgetsList } from "../../components/BudgetsList";
 import type { Budget } from "../../types/Budget";
 import { ModalEditBudget } from "./ModalEditBudget";
+import { DateContext } from "../../contexts/DateContext";
 
 
 export type NewBudgetData = {
@@ -23,6 +24,7 @@ export type NewBudgetData = {
 export function Budgets() {
 
   const { user } = useContext(UserContext);
+  const { date } = useContext(DateContext);
 
   const [modalCreateVisible, setModalCreateVisible] = useState(false);
   const [modalEditVisible, setModalEditVisibile] = useState(false);
@@ -77,7 +79,9 @@ export function Budgets() {
 
   function getBudgets() {
 
-    const response = budget.get(user.id);
+    const dateSelected = new Date(date.date);
+
+    const response = budget.get(user.id, dateSelected.getTime());
 
     message.dismiss();
 
