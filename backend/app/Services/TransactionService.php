@@ -41,11 +41,14 @@ class TransactionService
         }
     }
 
-    public function getByUseId(int $id): Response
+    public function getByUseId(array $request): Response
     {
         try {
 
-            $transactions = $this->transactionRepository->getTransactionsByUseId($id);
+            $initialDate = date('Y-m-01 H:i:s', round($request['date'] / 1000));
+            $finishDate = date('Y-m-t H:i:s', round($request['date'] / 1000));
+
+            $transactions = $this->transactionRepository->getTransactionsByUseId($request['id'], $initialDate, $finishDate);
 
             if (count($transactions) < 1) throw new NotFoundException("Sem Transações");
 
