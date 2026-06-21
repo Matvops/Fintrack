@@ -45,8 +45,8 @@ class TransactionService
     {
         try {
 
-            $initialDate = date('Y-m-01 H:i:s', round($request['date'] / 1000));
-            $finishDate = date('Y-m-t H:i:s', round($request['date'] / 1000));
+            $initialDate = Functions::getInitialDateOfMonth($request['date']);
+            $finishDate = Functions::getFinishDateOfMonth($request['date']);
 
             $transactions = $this->transactionRepository->getTransactionsByUseId($request['id'], $initialDate, $finishDate);
 
