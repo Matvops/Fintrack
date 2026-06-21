@@ -15,7 +15,9 @@ class TransactionRepository {
                             ->get();
     }
 
-    public function getTransactionsByBudgetId(int $budgetId) {
-        return Transaction::where('tra_bdt_id', $budgetId)->get();
+    public function getTransactionsByBudgetId(int $budgetId, string $initialDate, string $finishDate) {
+        return Transaction::where('tra_bdt_id', $budgetId)
+                            ->whereBetween('tra_date', [$initialDate, $finishDate])
+                            ->get();
     } 
 }
