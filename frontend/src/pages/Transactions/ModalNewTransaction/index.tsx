@@ -12,6 +12,7 @@ import type { Budget } from "../../../types/Budget";
 import { DropdownGeneric } from "../../../components/DropdownGeneric";
 import type { TransactionType } from "../../../types/TransactionType";
 import type { NewTransationData } from "..";
+import { DateContext } from "../../../contexts/DateContext";
 
 type ModalNewTransaction = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -26,17 +27,21 @@ type Category = {
 export function ModalNewTransaction({ setVisible, create }: ModalNewTransaction) {
 
   const { user } = useContext(UserContext);
+  const { date } = useContext(DateContext);
+
   const [typeForm, setTypeForm] = useState<TransactionType>('expense')
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [category, setCategory] = useState<Category>();
-  const [date, setDate] = useState('');
+  const [creationDate, setCreationDate] = useState('');
   const [value, setValue] = useState('');
   const [description, setDescription] = useState('');
 
   function getBudgets() {
 
-    const response = budget.get(user.id);
+    const dateSelected = new Date(date.date);
+
+    const response = budget.get(user.id, dateSelected.getTime());
 
     message.dismiss();
 
@@ -94,7 +99,7 @@ export function ModalNewTransaction({ setVisible, create }: ModalNewTransaction)
         </div>
 
 
-        <form className={style.form} onSubmit={(e) => create({category: category?.value, id: user.id, date: date, type: typeForm, description: description, value: value}, e)}>
+        <form className={style.form} onSubmit={(e) => create({category: category?.value, id: user.id, date: creationDate, type: typeForm, description: description, value: value}, e)}>
 
           <InputDefault
             label='DESCRIÇÃO'
@@ -130,8 +135,8 @@ export function ModalNewTransaction({ setVisible, create }: ModalNewTransaction)
               label='DATA (AAAA-MM-DD)'
               type='text'
               placeholder="2026-02-02"
-              onChange={e => setDate(maskDate(e.target.value))}
-              value={date}
+              onChange={e => setCreationDate(maskDate(e.target.value))}
+              value={creationDate}
             />
           </div>
 
