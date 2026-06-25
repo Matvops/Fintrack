@@ -9,14 +9,20 @@ import { UserContext } from '../../contexts/UserContext';
 import type { Dashboard } from '../../types/Dashboard';
 import { formatToReal } from '../../utils/formatToReal';
 import { ChartPie } from './ChartPie';
+import { DateContext } from '../../contexts/DateContext';
 
 export function Home() {
 
   const { user } = useContext(UserContext);
+  const { date } = useContext(DateContext);
+
   const [dashboardData, setDashboardData] = useState<Dashboard>();
 
   function getData() {
-    const response = dashboard.get(user.id);
+    
+    const dateSelected = new Date(date.date);
+
+    const response = dashboard.get(user.id, dateSelected.getTime());
 
     message.dismiss();
 
