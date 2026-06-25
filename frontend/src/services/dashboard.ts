@@ -6,11 +6,11 @@ import api from "./api";
 export const dashboard = {
 
 
-    async get(id: number|null): Promise<ResponseApi> 
+    async get(id: number|null, date: number): Promise<ResponseApi> 
     {
 
         try {
-            const response = await api.post("/dashboard/get", {id});
+            const response = await api.post("/dashboard/get", {id, date});
 
             return response.data;
         } catch (error: unknown) {
