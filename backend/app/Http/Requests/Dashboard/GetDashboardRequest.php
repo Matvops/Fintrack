@@ -23,7 +23,8 @@ class GetDashboardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:users,use_id'
+            'id' => 'required|exists:users,use_id',
+            'date' => 'required',
         ];
     }
 
@@ -32,6 +33,7 @@ class GetDashboardRequest extends FormRequest
         return [
             'id.required' => 'O id é obrigatório',
             'id.exists' => 'Erro ao buscar valores',
+            'date.exists' => 'A data é obrigatória',
         ];
     }
 }
