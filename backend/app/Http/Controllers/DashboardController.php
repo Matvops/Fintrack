@@ -16,9 +16,12 @@ class DashboardController extends Controller{
 
     public function get(GetDashboardRequest $request) {
 
-        $id = $request->input('id');
+        $request = [
+            'id' => $request->input('id'),
+            'date' => $request->input('date')
+        ];
 
-        $response = $this->service->getDashboardData($id);
+        $response = $this->service->getDashboardData($request);
 
         return $this->sendResponse($response);
 
