@@ -96,8 +96,8 @@ export function Budgets() {
   }
 
   useEffect(() => {
-    getBudgets();
-  }, [])
+     getBudgets(); 
+  }, [date])
 
   return (
     <MainTemplate title="Orçamentos">

@@ -16,10 +16,10 @@ export function Home() {
   const { user } = useContext(UserContext);
   const { date } = useContext(DateContext);
 
-  const [dashboardData, setDashboardData] = useState<Dashboard>();
+  const [dashboardData, setDashboardData] = useState<Dashboard|null>(null);
 
   function getData() {
-    
+
     const dateSelected = new Date(date.date);
 
     const response = dashboard.get(user.id, dateSelected.getTime());
@@ -35,61 +35,63 @@ export function Home() {
       }
     })
   }
-  
+
   useEffect(() => {
     getData();
-  }, []);
+  }, [date]);
 
   return (
     <MainTemplate title='Dashboard'>
-        <div className={style.body}>
-          <section className={style.cards}>
+      <div className={style.body}>
+        <section className={style.cards}>
 
-            <div className={style.card}>
-              <div className={style.headerCard}>
-                <span className={style.title}>Receitas</span>
-                <div className={style.arrowUpIcon}>
-                  <ArrowUpRight />
-                </div>
+          <div className={style.card}>
+            <div className={style.headerCard}>
+              <span className={style.title}>Receitas</span>
+              <div className={style.arrowUpIcon}>
+                <ArrowUpRight />
               </div>
-              <h1>{formatToReal(dashboardData?.income ?? '')}</h1>
             </div>
+            <h1>{formatToReal(dashboardData?.income ?? '')}</h1>
+          </div>
 
-            <div className={style.card}>
-              <div className={style.headerCard}>
-                <span className={style.title}>Despesas</span>
-                <div className={style.arrowDownIcon}>
-                  <ArrowDownRight />
-                </div>
+          <div className={style.card}>
+            <div className={style.headerCard}>
+              <span className={style.title}>Despesas</span>
+              <div className={style.arrowDownIcon}>
+                <ArrowDownRight />
               </div>
-              <h1>{formatToReal(dashboardData?.expense ?? '')}</h1>
             </div>
+            <h1>{formatToReal(dashboardData?.expense ?? '')}</h1>
+          </div>
 
-            <div className={style.card}>
-              <div className={style.headerCard}>
-                <span className={style.title}>Saldos</span>
-                <div className={style.chartIcon}>
-                  <ChartLine />
-                </div>
+          <div className={style.card}>
+            <div className={style.headerCard}>
+              <span className={style.title}>Saldos</span>
+              <div className={style.chartIcon}>
+                <ChartLine />
               </div>
-              <h1>{dashboardData?.balance.includes('-') ? '-' + formatToReal(dashboardData?.balance ?? '') : formatToReal(dashboardData?.balance ?? '')}</h1>
             </div>
-          </section>
+            <h1>{dashboardData?.balance.includes('-') ? '-' + formatToReal(dashboardData?.balance ?? '') : formatToReal(dashboardData?.balance ?? '')}</h1>
+          </div>
+        </section>
 
-          <section className={style.charts}>
-            <div className={style.cardChartLine}>
-              <ChartLineArea
-                data={[...dashboardData?.peerMonths || []].reverse()}
-              />
-            </div>
+        <section className={style.charts}>
+          <div className={style.cardChartLine}>
+            <ChartLineArea
+              data={[...dashboardData?.peerMonths || []].reverse()}
+            />
+          </div>
 
+          {!!dashboardData?.peerBudgets.length && (
             <div className={style.cardPieChart}>
               <ChartPie
                 values={dashboardData?.peerBudgets}
               />
             </div>
-          </section>
-        </div>
+          )}
+        </section>
+      </div>
     </MainTemplate>
   );
 }

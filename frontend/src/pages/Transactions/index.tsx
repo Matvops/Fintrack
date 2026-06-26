@@ -70,8 +70,8 @@ export function Transactions() {
   }
 
   useEffect(() => {
-    getTransactions();
-  }, []);
+     getTransactions(); 
+  }, [date])
 
   const getList = () => {
 
