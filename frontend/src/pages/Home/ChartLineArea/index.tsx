@@ -2,8 +2,8 @@ import { RechartsDevtools } from "@recharts/devtools";
 import { useEffect, useState } from "react";
 import { Area, AreaChart, Legend, Tooltip, XAxis, YAxis, type DataKey, type LegendPayload } from "recharts";
 import type { ValuesPeerDataDashboard } from "../../../types/ValuesPeerDataDashboard";
-import { formatToReal } from "../../../utils/formatToReal";
 import style from './style.module.css';
+import { useFormatToReal } from "../../../hooks/useDisplayValues";
 
 type ChartLineData = {
   data: ValuesPeerDataDashboard[] | undefined
@@ -13,6 +13,7 @@ export function ChartLineArea({ data }: ChartLineData) {
 
   const [hoveringDataKey, setHoveringDataKey] = useState<DataKey<any> | undefined>(undefined);
 
+  const formatToReal = useFormatToReal();
 
   const incomeOpacity = hoveringDataKey === 'Receitas' ? 0.8 : .4;
   const expenseOpacity = hoveringDataKey === 'Despesas' ? 0.8 : .4;

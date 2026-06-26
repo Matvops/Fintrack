@@ -1,7 +1,7 @@
 import { Pencil } from 'lucide-react';
 import style from './style.module.css';
 import type { Budget } from '../../types/Budget';
-import { formatToReal } from '../../utils/formatToReal';
+import { useFormatToReal } from '../../hooks/useDisplayValues';
 
 type BudgetsListProps = {
   budgets: Budget[],
@@ -10,6 +10,8 @@ type BudgetsListProps = {
 }
 
 export function BudgetsList({ budgets, setBudget, setModalVisible }: BudgetsListProps) {
+
+  const formatToReal = useFormatToReal();
 
   const get = () => {
 

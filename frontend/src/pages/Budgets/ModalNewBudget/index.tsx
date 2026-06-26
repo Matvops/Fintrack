@@ -7,8 +7,8 @@ import { useContext, useState } from 'react';
 import { Colors } from '../../../components/Colors';
 import type { MainColor } from '../../../types/MainColor';
 import { UserContext } from '../../../contexts/UserContext';
-import { formatToReal } from '../../../utils/formatToReal';
 import type { NewBudgetData } from '..';
+import { useFormatToReal } from '../../../hooks/useDisplayValues';
 
 type ModalNewBudgetProps = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -16,6 +16,8 @@ type ModalNewBudgetProps = {
 }
 
 export function ModalNewBudget({ setVisible, create }: ModalNewBudgetProps) {
+
+  const formatToReal = useFormatToReal();
 
   const [name, setName] = useState('');
   const [limit, setLimit] = useState('');

@@ -7,12 +7,12 @@ import { budget } from "../../../services/budget";
 import { message } from "../../../adapters/message";
 import { UserContext } from "../../../contexts/UserContext";
 import { maskDate } from "../../../utils/maskDate";
-import { formatToReal } from "../../../utils/formatToReal";
 import type { Budget } from "../../../types/Budget";
 import { DropdownGeneric } from "../../../components/DropdownGeneric";
 import type { TransactionType } from "../../../types/TransactionType";
 import type { NewTransationData } from "..";
 import { DateContext } from "../../../contexts/DateContext";
+import { useFormatToReal } from "../../../hooks/useDisplayValues";
 
 type ModalNewTransaction = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -28,6 +28,8 @@ export function ModalNewTransaction({ setVisible, create }: ModalNewTransaction)
 
   const { user } = useContext(UserContext);
   const { date } = useContext(DateContext);
+
+  const formatToReal = useFormatToReal();
 
   const [typeForm, setTypeForm] = useState<TransactionType>('expense')
   const [budgets, setBudgets] = useState<Budget[]>([]);

@@ -6,8 +6,8 @@ import { InputDefault } from '../../../components/InputDefault';
 import { useState } from 'react';
 import { Colors } from '../../../components/Colors';
 import type { MainColor } from '../../../types/MainColor';
-import { formatToReal } from '../../../utils/formatToReal';
 import type { Goal } from '../../../types/Goal';
+import { useFormatToReal } from '../../../hooks/useDisplayValues';
 
 type ModalEditGoalProps = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -18,10 +18,14 @@ type ModalEditGoalProps = {
 
 export function ModalEditGoal({ setVisible, editar, excluir, goal }: ModalEditGoalProps) {
 
+    
+  const formatToReal = useFormatToReal();
+
   const [name, setName] = useState(goal.gls_name ?? '');
   const [balance, setBalance] = useState(formatToReal(goal.gls_balance ?? '0'));
   const [balanceTarget, setBalanceTarget] = useState(formatToReal(goal.gls_balance_target ?? ''));
   const [color, setColor] = useState<MainColor>(() => {
+
 
     const color = goal?.gls_color.toLowerCase();
     if (color !== 'ambar' && color !== 'rosa' && color !== 'violeta' && color !== 'esmeralda' && color !== 'azul') {

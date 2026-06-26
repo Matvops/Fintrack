@@ -7,14 +7,16 @@ import { dashboard } from '../../services/dashboard';
 import { message } from '../../adapters/message';
 import { UserContext } from '../../contexts/UserContext';
 import type { Dashboard } from '../../types/Dashboard';
-import { formatToReal } from '../../utils/formatToReal';
 import { ChartPie } from './ChartPie';
 import { DateContext } from '../../contexts/DateContext';
+import { useFormatToReal } from '../../hooks/useDisplayValues';
 
 export function Home() {
 
   const { user } = useContext(UserContext);
   const { date } = useContext(DateContext);
+
+  const formatToReal = useFormatToReal();
 
   const [dashboardData, setDashboardData] = useState<Dashboard|null>(null);
 

@@ -1,7 +1,7 @@
 import { Pencil } from 'lucide-react';
 import style from './style.module.css';
 import type { Goal } from '../../types/Goal';
-import { formatToReal } from '../../utils/formatToReal';
+import { useFormatToReal } from '../../hooks/useDisplayValues';
 
 type GoalsListProps = {
   goals: Goal[] | [],
@@ -10,6 +10,8 @@ type GoalsListProps = {
 }
 
 export function GoalsList({ goals, setSelectedGoal, setModalEditVisible }: GoalsListProps) {
+
+  const formatToReal = useFormatToReal();
 
   const getCards = () => {
 

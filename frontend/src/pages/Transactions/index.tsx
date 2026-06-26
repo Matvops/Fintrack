@@ -8,8 +8,8 @@ import { message } from "../../adapters/message";
 import { transaction } from "../../services/transaction";
 import { UserContext } from "../../contexts/UserContext";
 import type { Transaction } from "../../types/Transaction";
-import { formatToReal } from "../../utils/formatToReal";
 import { DateContext } from "../../contexts/DateContext";
+import { useFormatToReal } from "../../hooks/useDisplayValues";
 
 export type NewTransationData = {
   id: number | null,
@@ -25,6 +25,9 @@ export function Transactions() {
 
   const { user } = useContext(UserContext);
   const { date } = useContext(DateContext);
+
+  const formatToReal = useFormatToReal();
+  
 
   const [modalVisible, setModalVisible] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);

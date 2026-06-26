@@ -6,8 +6,8 @@ import { InputDefault } from '../../../components/InputDefault';
 import { useState } from 'react';
 import { Colors } from '../../../components/Colors';
 import type { MainColor } from '../../../types/MainColor';
-import { formatToReal } from '../../../utils/formatToReal';
 import type { Budget } from '../../../types/Budget';
+import { useFormatToReal } from '../../../hooks/useDisplayValues';
 
 type ModalEditBudgetProps = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -17,6 +17,8 @@ type ModalEditBudgetProps = {
 }
 
 export function ModalEditBudget({ setVisible, edit, excluir, budget }: ModalEditBudgetProps) {
+
+  const formatToReal = useFormatToReal();
 
   const [name, setName] = useState(budget.bdt_name ?? '');
   const [limit, setLimit] = useState(formatToReal(budget.bdt_limit.toString() ?? '0'));

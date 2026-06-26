@@ -8,7 +8,7 @@ import { Colors } from '../../../components/Colors';
 import type { MainColor } from '../../../types/MainColor';
 import type { NewGoalData } from '..';
 import { UserContext } from '../../../contexts/UserContext';
-import { formatToReal } from '../../../utils/formatToReal';
+import { useFormatToReal } from '../../../hooks/useDisplayValues';
 
 type ModalNewGoalProps = {
   setVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -24,7 +24,7 @@ export function ModalNewGoal({ setVisible, cadastrar }: ModalNewGoalProps) {
   const { user } = useContext(UserContext);
   const [id] = useState(user.id);
   
-
+  const formatToReal = useFormatToReal();
 
   return (
     <div className={style.modalBackground}>
