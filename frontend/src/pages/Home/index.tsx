@@ -39,6 +39,10 @@ export function Home() {
   }
 
   useEffect(() => {
+    document.title = 'Dashboard'
+  }, []);
+
+  useEffect(() => {
     getData();
   }, [date]);
 

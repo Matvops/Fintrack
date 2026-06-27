@@ -96,6 +96,10 @@ export function Budgets() {
   }
 
   useEffect(() => {
+    document.title = 'Budgets'
+  }, []);
+
+  useEffect(() => {
      getBudgets(); 
   }, [date])
 

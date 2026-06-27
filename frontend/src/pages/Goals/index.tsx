@@ -86,7 +86,8 @@ export function Goals() {
   }
 
   useEffect(() => {
-      getGoals();
+    getGoals();
+    document.title = 'Goals'
   }, []);
 
   return (

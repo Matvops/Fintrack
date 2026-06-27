@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MainTemplate } from "../../templates/MainTemplate";
 import style from './style.module.css';
 import type { MainColor } from "../../types/MainColor";
@@ -21,6 +21,11 @@ export function Settings() {
     setUser(initialState);
     navigation('/');
   }
+
+  useEffect(() => {
+    document.title = 'Settings';
+  }, []);
+  
 
   return (
     <MainTemplate title="Configurações" displayDate={false}>

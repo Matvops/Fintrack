@@ -73,6 +73,10 @@ export function Transactions() {
   }
 
   useEffect(() => {
+    document.title = 'Transactions';
+  }, []);
+
+  useEffect(() => {
      getTransactions(); 
   }, [date])
 
