@@ -9,7 +9,6 @@ import { UserContext } from '../../contexts/UserContext';
 import type { Dashboard } from '../../types/Dashboard';
 import { ChartPie } from './ChartPie';
 import { DateContext } from '../../contexts/DateContext';
-import { useFormatToReal } from '../../hooks/useDisplayValues';
 import { CardHome } from '../../components/CardHome';
 
 export function Home() {
@@ -24,8 +23,6 @@ export function Home() {
   
   const { user } = useContext(UserContext);
   const { date } = useContext(DateContext);
-
-  const formatToReal = useFormatToReal();
 
   const [dashboardData, setDashboardData] = useState<Dashboard|null>(null);
 
