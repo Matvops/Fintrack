@@ -1,6 +1,7 @@
 import { Legend, Pie, PieChart, Tooltip } from 'recharts';
 import { RechartsDevtools } from '@recharts/devtools';
 import type { ValuesPeerBudgetDashboard } from '../../../types/ValuesPeerBudgetDashboard';
+import { useFormatToReal } from '../../../hooks/useDisplayValues';
 
 type ChartPieData = {
   values: ValuesPeerBudgetDashboard[] | undefined
@@ -8,6 +9,8 @@ type ChartPieData = {
 
 
 export function ChartPie({ values }: ChartPieData) {
+
+  const formatToReal = useFormatToReal();
 
   const colorMap: Record<string, string> = {
     ambar: '#F59E0B',
@@ -39,12 +42,7 @@ export function ChartPie({ values }: ChartPieData) {
 
       />
       <Tooltip
-        formatter={(value) =>
-          new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-          }).format(Number(value))
-        }
+        formatter={(value) => formatToReal(value?.toString() ?? '')}
         contentStyle={{
           backgroundColor: '#111827',
           borderColor: '#374151',
