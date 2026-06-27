@@ -1,3 +1,38 @@
+.ambar {
+    color: var(--ambar) !important;
+    box-shadow: -.2rem 0 0 var(--ambar);
+    background-color: rgb(from var(--ambar) r g b / 10%);
+    --selected-color: var(--ambar);
+}
+
+.rosa {
+    color: var(--rosa) !important;
+    box-shadow: -.2rem 0 0 var(--rosa);
+    background-color: rgb(from var(--rosa) r g b / 10%);
+    --selected-color: var(--rosa);
+}
+
+.violeta {
+    color: var(--violeta) !important;
+    box-shadow: -.2rem 0 0 var(--violeta);
+    background-color: rgb(from var(--violeta) r g b / 10%);
+    --selected-color: var(--violeta);
+}
+
+.esmeralda {
+    color: var(--esmeralda) !important;
+    box-shadow: -.2rem 0 0 var(--esmeralda);
+    background-color: rgb(from var(--esmeralda) r g b / 10%);
+    --selected-color: var(--esmeralda);
+}
+
+.azul {
+    color: var(--azul) !important;
+    box-shadow: -.2rem 0 0 var(--azul);
+    background-color: rgb(from var(--azul) r g b / 10%);
+    --selected-color: var(--azul);
+}
+
 .sidebar {
     background-color: var(--background-secondary);
     height: 99.5vh;
@@ -42,15 +77,12 @@
 }
 
 .activeSection {
-    color: var(--ambar) !important;
-    background-color: rgba(265, 165, 0, .1);
     border-radius: .8rem;
     font-weight: 700;
-    box-shadow: -.2rem 0 0 rgba(255, 165, 0, 1);
 }
 
 .activeSection svg {
-    color: var(--ambar);
+    color: var(--selected-color);
 }
 
 .logoutContainer {

@@ -17,6 +17,15 @@ export function Sidebar() {
   const locate = useLocation();
   const page = locate.pathname.split('/')[1];
 
+
+  const colors = {
+    ambar: style.ambar,
+    rosa: style.rosa,
+    azul: style.azul,
+    esmeralda: style.esmeralda,
+    violeta: style.violeta,
+  };
+
   function setPage(activeSection: sections) {
     navigation(`/${activeSection}`);
   }
@@ -39,31 +48,31 @@ export function Sidebar() {
 
       <nav className={style.sections}>
         <p
-          className={`${style.section} ${page === 'home' ? style.activeSection : ''}`}
+          className={`${style.section} ${page === 'home' ? `${style.activeSection} ${colors[user.mainColor]}` : ''}`}
           onClick={() => setPage('home')}
         >
           <LayoutDashboard />Dashboard
         </p>
         <p
-          className={`${style.section} ${page === 'transactions' ? style.activeSection : ''}`}
+          className={`${style.section} ${page === 'transactions' ? `${style.activeSection} ${colors[user.mainColor]}` : ''}`}
           onClick={() => setPage('transactions')}
         >
           <CreditCard />Transações
         </p>
         <p
-          className={`${style.section} ${page === 'budgets' ? style.activeSection : ''}`}
+          className={`${style.section} ${page === 'budgets' ? `${style.activeSection} ${colors[user.mainColor]}` : ''}`}
           onClick={() => setPage('budgets')}
         >
           <Wallet />Orçamento
         </p>
         <p
-          className={`${style.section} ${page === 'goals' ? style.activeSection : ''}`}
+          className={`${style.section} ${page === 'goals' ? `${style.activeSection} ${colors[user.mainColor]}` : ''}`}
           onClick={() => setPage('goals')}
         >
           <Target />Metas
         </p>
         <p
-          className={`${style.section} ${page === 'settings' ? style.activeSection : ''}`}
+          className={`${style.section} ${page === 'settings' ? `${style.activeSection} ${colors[user.mainColor]}` : ''}`}
           onClick={() => setPage('settings')}
         >
           <Settings />Configurações
