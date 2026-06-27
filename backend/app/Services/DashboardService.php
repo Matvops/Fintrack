@@ -36,7 +36,9 @@ class DashboardService
                 'peerMonths' => []
             ];
 
-            $actualMonth = strtolower(now()->translatedFormat('F'));
+            $date = Carbon::createFromTimestampMs($request['date']);
+
+            $actualMonth = strtolower($date->translatedFormat('F'));
 
             foreach ($transactions as $transaction) {
 
