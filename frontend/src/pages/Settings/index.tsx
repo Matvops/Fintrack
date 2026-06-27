@@ -11,8 +11,17 @@ import { useNavigate } from "react-router-dom";
 export function Settings() {
 
   const { user, setUser } = useContext(UserContext);
-  const [color, setColor] = useState<MainColor>('ambar');
+  const [color, setColor] = useState<MainColor>(user.mainColor);
   const navigation = useNavigate();
+
+  useEffect(() => {
+    setUser(prevState => {
+      return {
+        ...prevState,
+        mainColor: color
+      }
+    })
+  }, [color]);
 
 
   async function logout() {
