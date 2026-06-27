@@ -41,7 +41,9 @@ export function BudgetsList({ budgets, setBudget, setModalVisible }: BudgetsList
           <progress className={`${style.progressBar} ${style['background-' + budget.bdt_color.toLowerCase()]}`} value={percentage} />
 
           <div className={style.footerCard}>
-            <span className={style.headerSubTitle}>Restam {formatToReal(budget.bdt_remaining_value ?? '')}</span>
+            <span className={style.headerSubTitle}>{Number(budget.bdt_amount_spent) > Number(budget.bdt_limit) ? 'Excedeu' : 'Restam'} 
+              {formatToReal(budget.bdt_remaining_value ?? '')}
+            </span>
             <span className={`${style.percentage} ${style[budget.bdt_color.toLowerCase()]}`}>{budget.bdt_percentage}%</span>
           </div>
         </div>
