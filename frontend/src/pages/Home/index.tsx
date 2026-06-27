@@ -10,9 +10,18 @@ import type { Dashboard } from '../../types/Dashboard';
 import { ChartPie } from './ChartPie';
 import { DateContext } from '../../contexts/DateContext';
 import { useFormatToReal } from '../../hooks/useDisplayValues';
+import { CardHome } from '../../components/CardHome';
 
 export function Home() {
 
+  const colors = {
+    ambar: style.ambar,
+    rosa: style.rosa,
+    azul: style.azul,
+    esmeralda: style.esmeralda,
+    violeta: style.violeta,
+  };
+  
   const { user } = useContext(UserContext);
   const { date } = useContext(DateContext);
 
@@ -51,35 +60,35 @@ export function Home() {
       <div className={style.body}>
         <section className={style.cards}>
 
-          <div className={style.card}>
-            <div className={style.headerCard}>
-              <span className={style.title}>Receitas</span>
+          <CardHome
+            title='Receitas'
+            value={dashboardData?.income}
+            icon={
               <div className={style.arrowUpIcon}>
                 <ArrowUpRight />
               </div>
-            </div>
-            <h1>{formatToReal(dashboardData?.income ?? '')}</h1>
-          </div>
+            }
+          />
 
-          <div className={style.card}>
-            <div className={style.headerCard}>
-              <span className={style.title}>Despesas</span>
+          <CardHome
+            title='Despesas'
+            value={dashboardData?.expense}
+            icon={
               <div className={style.arrowDownIcon}>
                 <ArrowDownRight />
               </div>
-            </div>
-            <h1>{formatToReal(dashboardData?.expense ?? '')}</h1>
-          </div>
+            }
+          />
 
-          <div className={style.card}>
-            <div className={style.headerCard}>
-              <span className={style.title}>Saldos</span>
-              <div className={style.chartIcon}>
+          <CardHome
+            title='Saldos'
+            value={dashboardData?.balance}
+            icon={
+              <div className={`${style.chartIcon} ${colors[user.mainColor]}`}>
                 <ChartLine />
               </div>
-            </div>
-            <h1>{dashboardData?.balance.includes('-') ? '-' + formatToReal(dashboardData?.balance ?? '') : formatToReal(dashboardData?.balance ?? '')}</h1>
-          </div>
+            }
+          />
         </section>
 
         <section className={style.charts}>

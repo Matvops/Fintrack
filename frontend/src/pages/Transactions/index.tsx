@@ -113,7 +113,7 @@ export function Transactions() {
     <MainTemplate title="Transações">
         <main className={style.transactionsList}>
           <header className={style.headerList}>
-            <h3>{transactions.length} lançamentos</h3>
+            <h3>{transactions?.length ?? '0'} lançamentos</h3>
 
             <div onClick={() => setModalVisible(true)}>
               <button className={style.buttonHeaderSection}><PlusIcon /> Nova</button>

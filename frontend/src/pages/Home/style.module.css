@@ -5,30 +5,6 @@
     margin-top: 4rem;
 }
 
-.card {
-    background-color: var(--background-tertiary);
-    padding: 2rem;
-    box-sizing: border-box;
-    border-radius: .8rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    width: clamp(12rem, 24vw, 32rem);
-    max-height: 12rem;
-    gap: 2rem;
-}
-
-.headerCard {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.title {
-    color: var(--text-tertiary);
-    font-size: large;
-}
 
 .arrowUpIcon svg {
     background-color: rgba(13, 41, 49);
@@ -44,11 +20,39 @@
     border-radius: .4rem;
 }
 
-.chartIcon svg {
-    background-color: rgba(44, 37, 33);
-    color: rgb(225, 145, 12);
-    padding: .4rem;
-    border-radius: .4rem;
+.ambar {
+    color: var(--ambar) !important;
+    background-color: rgb(from var(--ambar) r g b / 10%);
+    --selected-color: var(--ambar);
+}
+
+.rosa {
+    color: var(--rosa) !important;
+    background-color: rgb(from var(--rosa) r g b / 10%);
+    --selected-color: var(--rosa);
+}
+
+.violeta {
+    color: var(--violeta) !important;
+    background-color: rgb(from var(--violeta) r g b / 10%);
+    --selected-color: var(--violeta);
+}
+
+.esmeralda {
+    color: var(--esmeralda) !important;
+    background-color: rgb(from var(--esmeralda) r g b / 10%);
+    --selected-color: var(--esmeralda);
+}
+
+.azul {
+    color: var(--azul) !important;
+    background-color: rgb(from var(--azul) r g b / 10%);
+    --selected-color: var(--azul);
+}
+
+.esmeralda, .azul, .rosa, .ambar, .violeta {
+    padding: .4rem .6rem;
+    border-radius: .4rem !important;
 }
 
 .charts {
