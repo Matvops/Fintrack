@@ -55,7 +55,10 @@ export function ChartLineArea({ data }: ChartLineData) {
       />
       <YAxis
         width="auto"
-        tickFormatter={(e) => `${formatToReal(e?.toString() ?? '')}`}
+        tickFormatter={(e) =>  new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(Number(e))}
         tickLine={false}
         axisLine={false}
         tickMargin={12}
