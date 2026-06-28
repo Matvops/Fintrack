@@ -71,6 +71,48 @@ return [
             'level' => Level::Error,
         ],
 
+        'BUDGET_LOG' => [
+            'driver' => 'custom',
+            'channel' => 'BUDGET_LOG',
+            'via' => DatabaseLogger::class,
+            'level' => Level::Info,
+        ],
+
+        'BUDGET_ERROR' => [
+            'driver' => 'custom',
+            'channel' => 'BUDGET_ERROR',
+            'via' => DatabaseLogger::class,
+            'level' => Level::Error,
+        ],
+
+        'GOAL_LOG' => [
+            'driver' => 'custom',
+            'channel' => 'GOAL_LOG',
+            'via' => DatabaseLogger::class,
+            'level' => Level::Info,
+        ],
+
+        'GOAL_ERROR' => [
+            'driver' => 'custom',
+            'channel' => 'GOAL_ERROR',
+            'via' => DatabaseLogger::class,
+            'level' => Level::Error,
+        ],
+
+        'DASHBOARD_LOG' => [
+            'driver' => 'custom',
+            'channel' => 'DASHBOARD_LOG',
+            'via' => DatabaseLogger::class,
+            'level' => Level::Info,
+        ],
+
+        'DASHBOARD_ERROR' => [
+            'driver' => 'custom',
+            'channel' => 'DASHBOARD_ERROR',
+            'via' => DatabaseLogger::class,
+            'level' => Level::Error,
+        ],
+
         'syslog' => [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),
