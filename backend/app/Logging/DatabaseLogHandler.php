@@ -22,7 +22,7 @@ class DatabaseLogHandler extends AbstractProcessingHandler
         DB::table('logs')->insert([
             'channel'    => $this->channelName, 
             'level'      => strtoupper($record->level->name),
-            'user'    => $record->context['user_id'],
+            'user'    => $record->context['user_id'] ?? '',
             'class'      => $record->context['class'],
             'method'     => $record->context['method'],
             'action'     => $record->context['action'],
