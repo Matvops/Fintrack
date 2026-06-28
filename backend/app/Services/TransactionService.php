@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Exceptions\NotFoundException;
+use App\Logging\InfoLogBuilder;
+use App\Logging\LogInvoker;
 use App\Models\Transaction;
 use App\Repositories\TransactionRepository;
 use App\Utils\Functions;
@@ -34,9 +36,13 @@ class TransactionService
             $transaction->tra_type = strtoupper($data['type']);
             $transaction->save();
 
+            LogInvoker::create(new InfoLogBuilder)
+                        ->withPayload($data)
+                        ->withResponse($transaction)
+                        ->save('TRANSACTION');
+
             return Response::getResponse(true, 'Transação cadastrada com sucesso');
         } catch (Exception $e) {
-            error_log($e->getMessage());
             return Response::getResponse(false, 'Erro ao cadastrar transação');
         }
     }
