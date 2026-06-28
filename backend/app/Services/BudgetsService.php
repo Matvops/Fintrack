@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Exceptions\NotFoundException;
+use App\Exceptions\PermissionDeniedException;
+use App\Logging\InfoLogBuilder;
+use App\Logging\LogInvoker;
 use App\Models\Budget;
 use App\Repositories\BudgetRepository;
 use App\Repositories\TransactionRepository;
@@ -34,6 +37,11 @@ class BudgetsService {
             $budget->bdt_color = strtoupper($request['color']);
             $budget->bdt_current_expense = 0;
             $budget->save();
+
+            LogInvoker::create(new InfoLogBuilder)
+                        ->withPayload($request)
+                        ->withResponse($budget)
+                        ->save('BUDGET');
 
             return Response::getResponse(true, 'Orçamento criado com sucesso', code: 201);
         } catch(Exception $e) {
@@ -73,11 +81,21 @@ class BudgetsService {
             DB::beginTransaction();
 
             $budget = $this->budgetRepository->getBudgetById($id);
+
+            $transactions = $budget->transactions();
+
+            if($transactions) throw new PermissionDeniedException('Esta categoria possui transações cadastradas');
+
             $budget->delete();
+
+            LogInvoker::delete(new InfoLogBuilder)
+                        ->withPayload(['id' => $id])
+                        ->withResponse($budget)
+                        ->save('BUDGET');
 
             DB::commit();
             return Response::getResponse(true, 'Orçamento excluído com sucesso');
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException|PermissionDeniedException $e) {
             DB::rollBack();
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
         } catch (Exception $e) {
@@ -97,6 +115,11 @@ class BudgetsService {
             $budget->bdt_limit = Functions::formatValue($data['bdt_limit']);
             $budget->bdt_color = strtoupper($data['bdt_color']);
             $budget->save();
+
+            LogInvoker::update(new InfoLogBuilder)
+                        ->withPayload($data)
+                        ->withResponse($budget)
+                        ->save('BUDGET');
 
             DB::commit();
             return Response::getResponse(true, 'Orçamento editado com sucesso');
