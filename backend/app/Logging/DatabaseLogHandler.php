@@ -22,12 +22,13 @@ class DatabaseLogHandler extends AbstractProcessingHandler
         DB::table('logs')->insert([
             'channel'    => $this->channelName, 
             'level'      => strtoupper($record->level->name),
+            'user'    => $record->context['user_id'],
             'class'      => $record->context['class'],
             'method'     => $record->context['method'],
             'action'     => $record->context['action'],
             'exception'  => isset($record->context['excpetion']) ? json_encode($record->context['excpetion']) : null,
-            'payload'    => isset($record->context['payload']) ? json_encode(json_encode($record->context['payload'])) : null,
-            'response'   => isset($record->context['response']) ? json_encode(json_encode($record->context['response'])) : null,
+            'payload'    => isset($record->context['payload']) ? json_encode($record->context['payload']) : null,
+            'response'   => isset($record->context['response']) ? json_encode($record->context['response']) : null,
             'created_at' => $record->datetime,
             'updated_at' => $record->datetime,
         ]);
