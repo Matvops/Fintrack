@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Exceptions\ValidationException;
+use App\Logging\InfoLogBuilder;
+use App\Logging\LogInvoker;
 use App\Models\Goal;
 use App\Repositories\GoalRepository;
 use App\Repositories\UserRepository;
@@ -43,6 +45,12 @@ class GoalsService
             $goal->gls_balance_target = str_replace(',', '.', $balanceTarget);
             $goal->gls_color = strtoupper($data['color']);
             $goal->save();
+
+            LogInvoker::create(new InfoLogBuilder)
+                        ->withPayload($data)
+                        ->withPayload($goal)
+                        ->save('GOAL');
+
 
             return Response::getResponse(true, 'Meta criada com sucesso');
         } catch (ValidationException $e) {
@@ -88,6 +96,11 @@ class GoalsService
             $goal->gls_color = strtoupper($request['gls_color']);
             $goal->save();
 
+            LogInvoker::update(new InfoLogBuilder)
+                        ->withPayload($request)
+                        ->withResponse($goal)
+                        ->save('GOAL');
+
             DB::commit();
 
             return Response::getResponse(true, 'Meta editada com sucesso');
@@ -108,6 +121,11 @@ class GoalsService
 
             $goal = $this->goalRepository->getGoalById($id);
             $goal->delete();
+
+            LogInvoker::delete(new InfoLogBuilder)
+                        ->withPayload(['id' => $id])
+                        ->withResponse($goal)
+                        ->save('GOAL');
 
             DB::commit();
             return Response::getResponse(true, 'Meta excluída com sucesso');
