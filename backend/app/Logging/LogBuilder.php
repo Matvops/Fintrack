@@ -7,7 +7,7 @@ use Exception;
 
 abstract class LogBuilder implements LogCommand {
 
-    protected ?int $userId;
+    protected int|null $userId = null;
     protected ?string $channel;
     protected ?string $class;
     protected ?string $method;
@@ -29,7 +29,7 @@ abstract class LogBuilder implements LogCommand {
         ];
     }
 
-    public function setUserId(int $userId) {
+    public function setUserId(int|null $userId) {
         $this->userId = $userId;
     }
 
@@ -65,4 +65,6 @@ abstract class LogBuilder implements LogCommand {
     protected abstract function toBudget();
     protected abstract function toGoal();
     protected abstract function toDashboard();
+    protected abstract function toAuth();
+    protected abstract function toInvalidChannel();
 }
