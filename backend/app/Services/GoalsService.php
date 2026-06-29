@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Exceptions\ValidationException;
+use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
 use App\Models\Goal;
@@ -54,8 +55,14 @@ class GoalsService
 
             return Response::getResponse(true, 'Meta criada com sucesso');
         } catch (ValidationException $e) {
+            LogInvoker::create(new ErrorLogBuilder)
+                        ->withPayload($data)
+                        ->save('GOAL', $e);
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
         } catch (Exception $e) {
+            LogInvoker::create(new ErrorLogBuilder)
+                        ->withPayload($data)
+                        ->save('GOAL', $e);
             return Response::getResponse(false, 'Erro ao criar meta', code: 500);
         }
     }
@@ -90,6 +97,8 @@ class GoalsService
 
             $goal = $this->goalRepository->getGoalById($request['gls_id']);
 
+            if(!$goal) throw new NotFoundException("Erro ao localizar meta");
+
             $goal->gls_name = $request['gls_name'];
             $goal->gls_balance = Functions::formatValue($request['gls_balance']);
             $goal->gls_balance_target = Functions::formatValue($request['gls_balance_target']);
@@ -106,9 +115,15 @@ class GoalsService
             return Response::getResponse(true, 'Meta editada com sucesso');
         } catch (NotFoundException $e) {
             DB::rollBack();
+            LogInvoker::update(new ErrorLogBuilder)
+                        ->withPayload($request)
+                        ->save('GOAL', $e);
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
         } catch (Exception $e) {
             DB::rollBack();
+            LogInvoker::update(new ErrorLogBuilder)
+                        ->withPayload($request)
+                        ->save('GOAL', $e);
             return Response::getResponse(false, 'Metas não localizadas', code: 500);
         }
     }
@@ -120,6 +135,9 @@ class GoalsService
             DB::beginTransaction();
 
             $goal = $this->goalRepository->getGoalById($id);
+            
+            if(!$goal) throw new NotFoundException("Erro ao localizar meta");
+
             $goal->delete();
 
             LogInvoker::delete(new InfoLogBuilder)
@@ -131,9 +149,17 @@ class GoalsService
             return Response::getResponse(true, 'Meta excluída com sucesso');
         } catch (NotFoundException $e) {
             DB::rollBack();
+            LogInvoker::delete(new ErrorLogBuilder)
+                        ->withPayload(['id' => $id])
+                        ->save('GOAL', $e);
+
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
         } catch (Exception $e) {
             DB::rollBack();
+            LogInvoker::delete(new ErrorLogBuilder)
+                        ->withPayload(['id' => $id])
+                        ->save('GOAL', $e);
+                        
             return Response::getResponse(false, 'Metas não localizadas', code: 500);
         }
     }
