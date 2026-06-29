@@ -23,30 +23,49 @@ class InfoLogBuilder extends LogBuilder {
             case 'DASHBOARD':
                 $this->toDashboard();
                 break;
+            case 'AUTH':
+                $this->toAuth();
+                break;
+            default:
+                $this->toInvalidChannel();
+                break;
         }
     }
 
     #[Override]
     public function toBudget()
     {
-        Log::channel('BUDGET_LOG')->info('', $this->adapter());
+        Log::channel('BUDGET')->info('', $this->adapter());
     }
 
     #[Override]
     public function toGoal()
     {
-        Log::channel('GOAL_LOG')->info('', $this->adapter());
+        Log::channel('GOAL')->info('', $this->adapter());
     }
 
     #[Override]
     public function toDashboard()
     {
-        Log::channel('DASHBOARD_LOG')->info('', $this->adapter());
+        Log::channel('DASHBOARD')->info('', $this->adapter());
     }
 
     #[Override]
     public function toTransaction()
     {
-        Log::channel('TRANSACTION_LOG')->info('', $this->adapter());
+        Log::channel('TRANSACTION')->info('', $this->adapter());
+    }
+
+    #[Override]
+    public function toAuth()
+    {
+        Log::channel('AUTH')->info('', $this->adapter());
+    }
+
+
+    #[Override]
+    public function toInvalidChannel()
+    {
+        Log::channel('INVALID_CHANNEL')->info('', $this->adapter());
     }
 }
