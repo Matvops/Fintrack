@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Exceptions\ValidationException;
+use App\Logging\ErrorLogBuilder;
+use App\Logging\InfoLogBuilder;
+use App\Logging\LogInvoker;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Utils\Response;
@@ -40,10 +43,25 @@ class AuthService
                 'name' => $user->use_name
             ];
 
+            LogInvoker::register(new InfoLogBuilder)
+                        ->withPayload($dados)
+                        ->withResponse($data)
+                        ->save('AUTH');
+
             return Response::getResponse(true, 'Usuário cadastrado com sucesso', data: $data, code: 201);
         } catch (ValidationException $e) {
+
+            LogInvoker::register(new ErrorLogBuilder)
+                        ->withPayload($dados)
+                        ->save('AUTH', $e);
+
             return Response::getResponse(false, $e->getMessage(), code: 400);
         } catch(Exception $e) {
+
+            LogInvoker::register(new ErrorLogBuilder)
+                        ->withPayload($dados)
+                        ->save('AUTH', $e);
+
             return Response::getResponse(false, 'Erro ao criar usuário', code: $e->getCode());
         }
     }
@@ -88,10 +106,25 @@ class AuthService
                 'name' => $user->use_name
             ];
 
+            LogInvoker::login(new InfoLogBuilder)
+                        ->withPayload($dados)
+                        ->withResponse($data)
+                        ->save('AUTH');
+
             return Response::getResponse(true, message: 'Login realizado com Sucesso!', data: $data);
         } catch(ValidationException $e) {
+
+            LogInvoker::login(new ErrorLogBuilder)
+                        ->withPayload($dados)
+                        ->save('AUTH', $e);
+
             return Response::getResponse(false, message: $e->getMessage(), code: $e->getCode());
         } catch(Exception $e) {
+
+            LogInvoker::login(new ErrorLogBuilder)
+                        ->withPayload($dados)
+                        ->save('AUTH', $e);
+
             return Response::getResponse(false, message: 'Error');
         }
 
