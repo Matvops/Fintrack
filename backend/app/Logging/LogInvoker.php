@@ -35,6 +35,16 @@ class LogInvoker {
         return new LogInvoker($builder);
     }
 
+    public static function login(LogBuilder $builder) {
+        $builder->setAction(ActionEnum::LOGIN);
+        return new LogInvoker($builder);
+    }
+
+    public static function register(LogBuilder $builder) {
+        $builder->setAction(ActionEnum::REGISTER);
+        return new LogInvoker($builder);
+    }
+
     public static function upload(LogBuilder $builder) {
         $builder->setAction(ActionEnum::UPLOAD);
         return new LogInvoker($builder);
