@@ -12,10 +12,7 @@ export function useFormatToReal() {
 
         const apenasNumeros = valor.replace(/\D/g, '');
 
-        let valorNumerico = Number(apenasNumeros);
-        if (valor.includes('.') || valor.includes(',')) {
-            valorNumerico /= 100;
-        }
+        const valorNumerico = Number(apenasNumeros) / 100;
 
         return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
