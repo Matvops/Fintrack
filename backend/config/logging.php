@@ -57,60 +57,46 @@ return [
             'ignore_exceptions' => false,
         ],
 
-        'TRANSACTION_LOG' => [
+        'TRANSACTION' => [
             'driver' => 'custom',
-            'channel' => 'TRANSACTION_LOG',
+            'channel' => 'TRANSACTION',
             'via' => DatabaseLogger::class,
             'level' => Level::Info,
         ],
 
-        'TRANSACTION_ERROR' => [
+        'BUDGET' => [
             'driver' => 'custom',
-            'channel' => 'TRANSACTION_ERROR',
-            'via' => DatabaseLogger::class,
-            'level' => Level::Error,
-        ],
-
-        'BUDGET_LOG' => [
-            'driver' => 'custom',
-            'channel' => 'BUDGET_LOG',
+            'channel' => 'BUDGET',
             'via' => DatabaseLogger::class,
             'level' => Level::Info,
         ],
 
-        'BUDGET_ERROR' => [
+        'GOAL' => [
             'driver' => 'custom',
-            'channel' => 'BUDGET_ERROR',
-            'via' => DatabaseLogger::class,
-            'level' => Level::Error,
-        ],
-
-        'GOAL_LOG' => [
-            'driver' => 'custom',
-            'channel' => 'GOAL_LOG',
+            'channel' => 'GOAL',
             'via' => DatabaseLogger::class,
             'level' => Level::Info,
         ],
 
-        'GOAL_ERROR' => [
+        'DASHBOARD' => [
             'driver' => 'custom',
-            'channel' => 'GOAL_ERROR',
-            'via' => DatabaseLogger::class,
-            'level' => Level::Error,
-        ],
-
-        'DASHBOARD_LOG' => [
-            'driver' => 'custom',
-            'channel' => 'DASHBOARD_LOG',
+            'channel' => 'DASHBOARD',
             'via' => DatabaseLogger::class,
             'level' => Level::Info,
         ],
 
-        'DASHBOARD_ERROR' => [
+        'AUTH' => [
             'driver' => 'custom',
-            'channel' => 'DASHBOARD_ERROR',
+            'channel' => 'AUTH',
             'via' => DatabaseLogger::class,
-            'level' => Level::Error,
+            'level' => Level::Info,
+        ],
+
+        'INVALID_CHANNEL' => [
+            'driver' => 'custom',
+            'channel' => 'INVALID_CHANNEL',
+            'via' => DatabaseLogger::class,
+            'level' => Level::Info,
         ],
 
         'syslog' => [
