@@ -10,4 +10,6 @@ enum ActionEnum: string {
     case UPLOAD = 'UPLOAD';
     case DOWNLOAD = 'DOWNLOAD';
     case SEND = 'SEND';
+    case LOGIN = 'LOGIN';
+    case REGISTER = 'REGISTER';
 }
