@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Exceptions\PermissionDeniedException;
+use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
 use App\Models\Budget;
@@ -45,6 +46,9 @@ class BudgetsService {
 
             return Response::getResponse(true, 'Orçamento criado com sucesso', code: 201);
         } catch(Exception $e) {
+            LogInvoker::create(new ErrorLogBuilder)
+                        ->withPayload($request)
+                        ->save('BUDGET', $e);
             return Response::getResponse(false, 'Erro ao criar novo orçamento', code: $e->getCode());
         }
     }
@@ -82,6 +86,8 @@ class BudgetsService {
 
             $budget = $this->budgetRepository->getBudgetById($id);
 
+            if(!$budget) throw new NotFoundException('Orçamento não encontrado');
+
             $transactions = $budget->transactions();
 
             if($transactions) throw new PermissionDeniedException('Esta categoria possui transações cadastradas');
@@ -97,9 +103,19 @@ class BudgetsService {
             return Response::getResponse(true, 'Orçamento excluído com sucesso');
         } catch (NotFoundException|PermissionDeniedException $e) {
             DB::rollBack();
+
+            LogInvoker::delete(new ErrorLogBuilder)
+                        ->withPayload(['id' => $id])
+                        ->save('BUDGET', $e);
+
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
         } catch (Exception $e) {
             DB::rollBack();
+            
+            LogInvoker::delete(new ErrorLogBuilder)
+                        ->withPayload(['id' => $id])
+                        ->save('BUDGET', $e);
+
             return Response::getResponse(false, 'Orçamento não localizado', code: 500);
         }
     }
@@ -125,6 +141,11 @@ class BudgetsService {
             return Response::getResponse(true, 'Orçamento editado com sucesso');
         } catch (Exception $e) {
             DB::rollBack();
+
+            LogInvoker::update(new ErrorLogBuilder)
+                        ->withPayload($data)
+                        ->save('BUDGET', $e);
+
             return Response::getResponse(false, 'Orçamento não localizado', code: 500);
         }
     }
