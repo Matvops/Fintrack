@@ -10,6 +10,7 @@ import { UserContext } from "../../contexts/UserContext";
 import type { Transaction } from "../../types/Transaction";
 import { DateContext } from "../../contexts/DateContext";
 import { useFormatToReal } from "../../hooks/useDisplayValues";
+import { ButtonTextIcon } from "../../components/ButtonTextIcon";
 
 export type NewTransationData = {
   id: number | null,
@@ -116,7 +117,10 @@ export function Transactions() {
             <h3>{transactions?.length ?? '0'} lançamentos</h3>
 
             <div onClick={() => setModalVisible(true)}>
-              <button className={style.buttonHeaderSection}><PlusIcon /> Nova</button>
+              <ButtonTextIcon 
+                text="Nova"
+                icon={<PlusIcon />}
+              />
             </div>
           </header>
 

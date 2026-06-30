@@ -11,6 +11,7 @@ import { BudgetsList } from "../../components/BudgetsList";
 import type { Budget } from "../../types/Budget";
 import { ModalEditBudget } from "./ModalEditBudget";
 import { DateContext } from "../../contexts/DateContext";
+import { ButtonTextIcon } from "../../components/ButtonTextIcon";
 
 
 export type NewBudgetData = {
@@ -111,7 +112,10 @@ export function Budgets() {
           </div>
 
           <div onClick={() => setModalCreateVisible(true)}>
-            <button className={style.buttonHeaderSection}><PlusIcon /> Novo orçamento</button>
+            <ButtonTextIcon 
+              text="Novo orçamento"
+              icon={<PlusIcon />}
+            />
           </div>
         </section>
 

@@ -10,6 +10,7 @@ import { UserContext } from '../../contexts/UserContext';
 import { GoalsList } from '../../components/GoalsList';
 import { ModalEditGoal } from './ModalEditGoal';
 import type { Goal } from '../../types/Goal';
+import { ButtonTextIcon } from '../../components/ButtonTextIcon';
 
 export type NewGoalData = {
   id: number|null,
@@ -98,7 +99,10 @@ export function Goals() {
           </div>
 
           <div onClick={() => setModalVisible(prevState => !prevState)}>
-            <button className={style.buttonHeaderSection}><PlusIcon /> Nova meta</button>
+            <ButtonTextIcon 
+              text="Nova meta"
+              icon={<PlusIcon />}
+            />
           </div>
         </section>
 
