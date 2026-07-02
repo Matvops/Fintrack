@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('use_email')->unique();
             $table->string('use_verification_token')->unique()->nullable();
             $table->timestamp('use_email_verified_at')->nullable();
-            $table->text('use_password')->unique();
+            $table->text('use_password');
             $table->timestamps();
         });
     }
