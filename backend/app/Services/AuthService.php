@@ -29,6 +29,8 @@ class AuthService
 
             $this->validateEmail($dados['email']);
 
+            if(password_verify($dados['confirmationPassword'], $dados['password'])) throw new ValidationException('As senhas não conferem');
+            
             $user = new User();
             $user->use_name = $dados['name'];
             $user->use_email = $dados['email'];
