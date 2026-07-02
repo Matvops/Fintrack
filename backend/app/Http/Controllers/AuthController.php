@@ -35,7 +35,7 @@ class AuthController extends Controller {
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
-            'conformationPassword' => $request->input('conformationPassword'),
+            'confirmationPassword' => $request->input('confirmationPassword'),
         ];
 
         $response = $this->service->register($dados);

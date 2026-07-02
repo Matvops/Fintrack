@@ -26,7 +26,7 @@ class DatabaseLogHandler extends AbstractProcessingHandler
             'class'      => $record->context['class'],
             'method'     => $record->context['method'],
             'action'     => $record->context['action'],
-            'exception'  => isset($record->context['excpetion']) ? json_encode($record->context['excpetion']) : null,
+            'exception'  => isset($record->context['exception']) ? json_encode($record->context['exception']) : null,
             'payload'    => isset($record->context['payload']) ? json_encode($record->context['payload']) : null,
             'response'   => isset($record->context['response']) ? json_encode($record->context['response']) : null,
             'created_at' => $record->datetime,
