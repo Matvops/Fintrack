@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\NotFoundException;
 use App\Exceptions\ValidationException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
@@ -132,20 +133,26 @@ class AuthService
 
     }
 
-    public function logout(int $use_id) {
+    public function logout(int $useId): Response
+    {
 
         try {
 
-            $user = $this->userRespository->getUserById($use_id);
+            $user = $this->userRespository->getUserById($useId);
 
-            if(!isset($user)) throw new ValidationException('Erro ao realizar login');
+            if(!isset($user)) throw new NotFoundException('Usuário não encontrado');
 
             Auth::logout();
             
             return Response::getResponse(true, 'Logout realizado com sucesso');
+        } catch(NotFoundException $e) {
+            LogInvoker::logout(new ErrorLogBuilder)->withPayload(['id' => $useId])->save('AUTH', $e);
+            return Response::getResponse(false, 'Erro ao realizar Logout');
         } catch(Exception $e) {
+            LogInvoker::logout(new ErrorLogBuilder)->withPayload(['id' => $useId])->save('AUTH', $e);
             return Response::getResponse(false, 'Erro ao realizar Logout');
         }
 
     }
+
 }
