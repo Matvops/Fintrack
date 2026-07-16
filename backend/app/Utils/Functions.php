@@ -2,6 +2,8 @@
 
 namespace App\Utils;
 
+use App\Exceptions\ValidationException;
+
 class Functions {
 
     public static function formatValue(string $value)
@@ -24,5 +26,23 @@ class Functions {
     {
         $finishDate = date('Y-m-t H:i:s', round($date / 1000));
         return $finishDate;
+    }
+
+    public static function validateEmail(string $email): void 
+    {
+        if(substr_count($email, '@') !== 1) throw new ValidationException('Email inválido');
+
+        $partsEmail = mb_split('@', $email);
+
+        $needles = ['&', '=', '\'', '&', '<', '>', ','];
+
+        foreach($needles as $needle) {
+            if(str_contains($email, $needle)) throw new ValidationException('Email inválido');
+        }
+
+        $domain = $partsEmail[1];
+
+        if(str_contains('..', $domain)) throw new ValidationException('Email inválido');
+ 
     }
 }

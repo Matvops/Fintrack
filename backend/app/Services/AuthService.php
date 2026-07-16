@@ -69,25 +69,7 @@ class AuthService
         }
     }
 
-    private function validateEmail(string $email): void 
-    {
-        if(substr_count($email, '@') !== 1) throw new ValidationException('Email inválido');
-
-        $partsEmail = mb_split('@', $email);
-
-        $needles = ['&', '=', '\'', '&', '<', '>', ','];
-
-        foreach($needles as $needle) {
-            if(str_contains($email, $needle)) throw new ValidationException('Email inválido');
-        }
-
-        $domain = $partsEmail[1];
-
-        if(str_contains('..', $domain)) throw new ValidationException('Email inválido');
- 
-    }
-
-    public function login(array $dados): Response
+    public function login(LoginDTO $loginDTO): Response
     {
 
         try {
