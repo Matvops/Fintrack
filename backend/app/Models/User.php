@@ -10,10 +10,6 @@ class User extends AuthUser
     public $table = 'users';
     public $primaryKey = 'use_id';
 
-    protected $hidden = [
-        'use_password'
-    ];
-
     public $fillable = [
         'use_id',
         'use_name',
