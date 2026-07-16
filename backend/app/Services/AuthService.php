@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Dto\Auth\LoginDTO;
+use App\Dto\User\UserDTO;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\ValidationException;
 use App\Logging\ErrorLogBuilder;
@@ -9,6 +11,7 @@ use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Utils\Functions;
 use App\Utils\Response;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +31,7 @@ class AuthService
 
         try {
 
-            $this->validateEmail($dados['email']);
+            Functions::validateEmail($dados['email']);
 
             if(password_verify($dados['confirmationPassword'], $dados['password'])) throw new ValidationException('As senhas não conferem');
             
@@ -74,40 +77,36 @@ class AuthService
 
         try {
             
-            $email = $dados['email'];
-            $password = $dados['password'];
+            $email = $loginDTO->email;
+            $password = $loginDTO->password;
 
             $user = $this->userRespository->getUserByEmail($email);
 
             if(!isset($user)) throw new ValidationException('E-mail ou senha inválidos');
 
             if(!password_verify($password, $user->use_password)) throw new ValidationException('E-mail ou senha inválidos');
-            
+
             Auth::login($user);
 
-            $data = [
-                'id' => $user->use_id,
-                'email' => $user->use_email,
-                'name' => $user->use_name
-            ];
+            $userDTO = UserDTO::fromModel($user);
 
             LogInvoker::login(new InfoLogBuilder)
-                        ->withPayload($dados)
-                        ->withResponse($data)
+                        ->withPayload($loginDTO)
+                        ->withResponse($userDTO)
                         ->save('AUTH');
 
-            return Response::getResponse(true, message: 'Login realizado com Sucesso!', data: $data);
+            return Response::getResponse(true, message: 'Login realizado com Sucesso!', data: $userDTO->toArray());
         } catch(ValidationException $e) {
 
             LogInvoker::login(new ErrorLogBuilder)
-                        ->withPayload($dados)
+                        ->withPayload($loginDTO)
                         ->save('AUTH', $e);
 
             return Response::getResponse(false, message: $e->getMessage(), code: $e->getCode());
         } catch(Exception $e) {
 
             LogInvoker::login(new ErrorLogBuilder)
-                        ->withPayload($dados)
+                        ->withPayload($loginDTO)
                         ->save('AUTH', $e);
 
             return Response::getResponse(false, message: 'Error');
