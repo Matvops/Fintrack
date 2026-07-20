@@ -3,13 +3,13 @@
 namespace App\Services;
 
 use App\Dto\Auth\LoginDTO;
+use App\Dto\Auth\RegisterDTO;
 use App\Dto\User\UserDTO;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\ValidationException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
-use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Utils\Functions;
 use App\Utils\Response;
@@ -26,46 +26,37 @@ class AuthService
         $this->userRespository = $userRepository;
     }
 
-    public function register(array $dados): Response
+    public function register(RegisterDTO $registerDTO): Response
     {
 
         try {
 
-            Functions::validateEmail($dados['email']);
+            Functions::validateEmail($registerDTO->email);
 
-            if(password_verify($dados['confirmationPassword'], $dados['password'])) throw new ValidationException('As senhas não conferem');
+            if($registerDTO->confirmationPassword !== $registerDTO->password) throw new ValidationException('As senhas não conferem');
             
-            $user = new User();
-            $user->use_name = $dados['name'];
-            $user->use_email = $dados['email'];
-            $user->use_password = bcrypt($dados['password']);
-            $user->save();
+            $user = $this->userRespository->register($registerDTO);
 
             Auth::login($user);
 
-            $data = [
-                'id' => $user->use_id,
-                'email' => $user->use_email,
-                'name' => $user->use_name
-            ];
+            $userDTO = UserDTO::fromModel($user);
 
             LogInvoker::register(new InfoLogBuilder)
-                        ->withPayload($dados)
-                        ->withResponse($data)
+                        ->withPayload($registerDTO->jsonSerialize())
+                        ->withResponse($userDTO)
                         ->save('AUTH');
 
-            return Response::getResponse(true, 'Usuário cadastrado com sucesso', data: $data, code: 201);
+            return Response::getResponse(true, 'Usuário cadastrado com sucesso', data: $userDTO->toArray(), code: 201);
         } catch (ValidationException $e) {
-
             LogInvoker::register(new ErrorLogBuilder)
-                        ->withPayload($dados)
+                        ->withPayload($registerDTO->jsonSerialize())
                         ->save('AUTH', $e);
 
             return Response::getResponse(false, $e->getMessage(), code: 400);
         } catch(Exception $e) {
 
             LogInvoker::register(new ErrorLogBuilder)
-                        ->withPayload($dados)
+                        ->withPayload($registerDTO->jsonSerialize())
                         ->save('AUTH', $e);
 
             return Response::getResponse(false, 'Erro ao criar usuário', code: $e->getCode());
@@ -91,7 +82,7 @@ class AuthService
             $userDTO = UserDTO::fromModel($user);
 
             LogInvoker::login(new InfoLogBuilder)
-                        ->withPayload($loginDTO)
+                        ->withPayload($loginDTO->jsonSerialize())
                         ->withResponse($userDTO)
                         ->save('AUTH');
 
@@ -99,14 +90,14 @@ class AuthService
         } catch(ValidationException $e) {
 
             LogInvoker::login(new ErrorLogBuilder)
-                        ->withPayload($loginDTO)
+                        ->withPayload($loginDTO->jsonSerialize())
                         ->save('AUTH', $e);
 
             return Response::getResponse(false, message: $e->getMessage(), code: $e->getCode());
         } catch(Exception $e) {
 
             LogInvoker::login(new ErrorLogBuilder)
-                        ->withPayload($loginDTO)
+                        ->withPayload($loginDTO->jsonSerialize())
                         ->save('AUTH', $e);
 
             return Response::getResponse(false, message: 'Error');
