@@ -181,6 +181,37 @@ class AuthServiceTest extends TestCase {
         $this->assertSame(400, $response->getCode());
     }
 
+    public function test_exception_on_login_method(): void 
+    {
+
+
+        $logInvoker = Mockery::mock('alias:App\Logging\LogInvoker');
+        $logInvoker->shouldReceive('login->withPayload->save')->andReturnNull();
+
+        $email = 'example@gmail.com';
+
+        $user = new User();
+        $user->use_name = 'Example';
+        $user->use_email = $email;
+        $user->use_id = 1;
+        $user->use_password = password_hash('password', PASSWORD_BCRYPT);
+
+        $this->userRepository->shouldReceive('getUserByEmail')
+                            ->once()
+                            ->with($email)
+                            ->andReturn($user);
+
+        $loginDTO = LoginDTO::fromArray([
+            'email' => $email,
+            'password' => 'password'
+        ]);
+
+        $response = $this->authService->login($loginDTO);
+
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Error', $response->getMessage());
+    }
+
     public function test_register_successfully(): void 
     {
 
@@ -278,5 +309,38 @@ class AuthServiceTest extends TestCase {
         $this->assertSame('As senhas não conferem', $response->getMessage());
         $this->assertSame(400, $response->getCode());
         
+    }
+
+    public function test_exception_on_register_method(): void 
+    {
+
+
+        $logInvoker = Mockery::mock('alias:App\Logging\LogInvoker');
+        $logInvoker->shouldReceive('register->withPayload->save')->andReturnNull();
+
+        $email = 'example@gmail.com';
+
+        $registerDTO = RegisterDTO::fromArray([
+            'name' => 'Example',
+            'email' => $email,
+            'password' => 'password',
+            'confirmationPassword' => 'password'
+        ]);
+
+        $user = new User();
+        $user->use_name = 'Example';
+        $user->use_email = $email;
+        $user->use_id = 1;
+        $user->use_password = password_hash('password', PASSWORD_BCRYPT);
+
+         $this->userRepository->shouldReceive('register')
+                            ->once()
+                            ->with($registerDTO)
+                            ->andReturn($user);
+
+        $response = $this->authService->register($registerDTO);
+
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Erro ao criar usuário', $response->getMessage());
     }
 }
