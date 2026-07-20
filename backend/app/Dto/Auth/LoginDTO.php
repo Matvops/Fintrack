@@ -2,7 +2,9 @@
 
 namespace App\Dto\Auth;
 
-readonly class LoginDTO {
+use JsonSerializable;
+
+readonly class LoginDTO implements JsonSerializable {
 
     public function __construct(
         public string $email,
@@ -22,6 +24,14 @@ readonly class LoginDTO {
         return [
             'email' => $this->email,
             'password' => $this->password,
+        ];
+    }
+
+    public function jsonSerialize(): mixed 
+    {
+        return [
+            'email' => $this->email,
+            'password' => '******'
         ];
     }
 }
