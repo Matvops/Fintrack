@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Dto\Transaction\CreateTransactionDTO;
 use App\Exceptions\NotFoundException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
@@ -24,28 +25,21 @@ class TransactionService
     }
 
 
-    public function create(array $data): Response
+    public function create(CreateTransactionDTO $createTransactionDTO): Response
     {
         try {
 
-            $transaction = new Transaction();
-            $transaction->tra_use_id = $data['id'];
-            $transaction->tra_bdt_id = $data['category'];
-            $transaction->tra_description = $data['description'];
-            $transaction->tra_value = Functions::formatValue($data['value']);
-            $transaction->tra_date = Carbon::parse("{$data['date']} 00:00:00")->toDateTimeString();
-            $transaction->tra_type = strtoupper($data['type']);
-            $transaction->save();
+            $transaction = $this->transactionRepository->register($createTransactionDTO);
 
             LogInvoker::create(new InfoLogBuilder)
-                        ->withPayload($data)
+                        ->withPayload($createTransactionDTO)
                         ->withResponse($transaction)
                         ->save('TRANSACTION');
 
             return Response::getResponse(true, 'Transação cadastrada com sucesso');
         } catch (Exception $e) {
             LogInvoker::create(new ErrorLogBuilder)
-                        ->withPayload($data)
+                        ->withPayload($createTransactionDTO)
                         ->save('TRANSACTION', $e);
 
             return Response::getResponse(false, 'Erro ao cadastrar transação');
@@ -64,6 +58,8 @@ class TransactionService
             if (count($transactions) < 1) throw new NotFoundException("Sem Transações");
 
             return Response::getResponse(true, 'Transações encontradas', $transactions);
+        } catch(NotFoundException $e) {
+            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
         } catch (Exception $e) {
             return Response::getResponse(false, 'Erro ao localizar transações', code: $e->getCode());
         }
