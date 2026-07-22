@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Dto\Transaction\CreateTransactionDTO;
 use App\Models\Transaction;
 
 class TransactionRepository {
@@ -20,4 +21,18 @@ class TransactionRepository {
                             ->whereBetween('tra_date', [$initialDate, $finishDate])
                             ->get();
     } 
+
+    public function register(CreateTransactionDTO $dto)
+    {
+        $transaction = new Transaction();
+        $transaction->tra_use_id = $dto->userId;
+        $transaction->tra_bdt_id = $dto->categoryId;
+        $transaction->tra_description = $dto->description;
+        $transaction->tra_value = $dto->value;
+        $transaction->tra_date = $dto->date;
+        $transaction->tra_type = $dto->type;
+        $transaction->save();
+
+        return $transaction;
+    }
 }
