@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dto\Transaction\CreateTransactionDTO;
 use App\Http\Requests\Transactions\CreateTransactionRequest;
 use App\Http\Requests\Transactions\GetTransactionsRequest;
 use App\Services\TransactionService;
@@ -17,16 +18,9 @@ class TransactionController extends Controller
 
     public function create(CreateTransactionRequest $request) {
 
-        $data = [
-            'id' => $request->input('id'),
-            'category' => $request->input('category'),
-            'description' => $request->input('description'),
-            'type' => $request->input('type'),
-            'value' => $request->input('value'),
-            'date' => $request->input('date'),
-        ];
+        $createTransactionDTO = CreateTransactionDTO::fromArray($request->validated());
 
-        $response = $this->service->create($data);
+        $response = $this->service->create($createTransactionDTO);
 
         return $this->sendResponse($response);
     }
