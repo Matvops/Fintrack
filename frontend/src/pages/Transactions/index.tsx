@@ -61,7 +61,7 @@ export function Transactions() {
       message.dismiss();
 
       response.then(data => {
-        if (data.message) {
+        if (data.status) {
           message.success(data.message);
           setTransactions(data.data);
         } else {
