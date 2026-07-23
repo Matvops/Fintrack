@@ -6,6 +6,7 @@ use App\Dto\Transaction\CreateTransactionDTO;
 use App\Models\Transaction;
 use App\Repositories\TransactionRepository;
 use App\Services\TransactionService;
+use App\Utils\Functions;
 use Exception;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -81,5 +82,41 @@ class TransactionServiceTest extends MockeryTestCase {
 
         $this->assertFalse($response->getStatus());
         $this->assertSame('Erro ao cadastrar transação', $response->getMessage());
+    }
+
+    public function test_get_transactions_by_use_id_successfully(): void 
+    {
+        $now = round(microtime(true) * 1000);
+
+        $dataInicio = Functions::getInitialDateOfMonth($now);
+        $dataFim = Functions::getFinishDateOfMonth($now);
+        $return = [1, 2, 3, 4, 5];
+        $this->repository->shouldReceive('getTransactionsByUseId')
+                        ->once()
+                        ->with(1, $dataInicio, $dataFim)
+                        ->andReturn($return);
+
+        $response = $this->service->getByUseId(['id' => 1, 'date' => $now]);
+        $this->assertTrue($response->getStatus());
+        $this->assertSame('Transações encontradas', $response->getMessage());
+        $this->assertSame(5, count($response->getData()));
+    }
+
+    public function test_get_transactions_by_use_id_without_transactions(): void 
+    {
+        $now = round(microtime(true) * 1000);
+
+        $dataInicio = Functions::getInitialDateOfMonth($now);
+        $dataFim = Functions::getFinishDateOfMonth($now);
+        $return = [];
+        $this->repository->shouldReceive('getTransactionsByUseId')
+                        ->once()
+                        ->with(1, $dataInicio, $dataFim)
+                        ->andReturn($return);
+
+        $response = $this->service->getByUseId(['id' => 1, 'date' => $now]);
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Sem Transações', $response->getMessage());
+        $this->assertSame(404, $response->getCode());
     }
 }

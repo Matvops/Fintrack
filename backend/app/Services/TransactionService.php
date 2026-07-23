@@ -7,12 +7,10 @@ use App\Exceptions\NotFoundException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
-use App\Models\Transaction;
 use App\Repositories\TransactionRepository;
 use App\Utils\Functions;
 use App\Utils\Response;
-use Carbon\Carbon;
-use Exception;
+use Throwable;
 
 class TransactionService
 {
@@ -37,7 +35,7 @@ class TransactionService
                         ->save('TRANSACTION');
 
             return Response::getResponse(true, 'Transação cadastrada com sucesso');
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             LogInvoker::create(new ErrorLogBuilder)
                         ->withPayload($createTransactionDTO)
                         ->save('TRANSACTION', $e);
@@ -60,7 +58,7 @@ class TransactionService
             return Response::getResponse(true, 'Transações encontradas', $transactions);
         } catch(NotFoundException $e) {
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return Response::getResponse(false, 'Erro ao localizar transações', code: $e->getCode());
         }
     }
