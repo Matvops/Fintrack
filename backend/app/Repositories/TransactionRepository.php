@@ -22,7 +22,7 @@ class TransactionRepository {
                             ->get();
     } 
 
-    public function register(CreateTransactionDTO $dto)
+    public function register(CreateTransactionDTO $dto): Transaction
     {
         $transaction = new Transaction();
         $transaction->tra_use_id = $dto->userId;
