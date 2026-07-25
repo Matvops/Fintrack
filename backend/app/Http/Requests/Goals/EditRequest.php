@@ -23,7 +23,7 @@ class EditRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:goals,id',
+            'id' => 'required|exists:goals,gls_id',
             'name' => 'required',
             'balance' => 'required',
             'balanceTarget' => 'required',
