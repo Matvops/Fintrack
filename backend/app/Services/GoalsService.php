@@ -76,34 +76,21 @@ class GoalsService
 
             DB::beginTransaction();
 
-            $goal = $this->goalRepository->getGoalById($request['gls_id']);
-
-            if(!$goal) throw new NotFoundException("Erro ao localizar meta");
-
-            $goal->gls_name = $request['gls_name'];
-            $goal->gls_balance = Functions::formatValue($request['gls_balance']);
-            $goal->gls_balance_target = Functions::formatValue($request['gls_balance_target']);
-            $goal->gls_color = strtoupper($request['gls_color']);
-            $goal->save();
+            $goal = $this->goalRepository->getGoalById($dto->id);
+            $goal = $this->goalRepository->edit($goal, $dto);
 
             LogInvoker::update(new InfoLogBuilder)
-                        ->withPayload($request)
+                        ->withPayload($dto->toArray())
                         ->withResponse($goal)
                         ->save('GOAL');
 
             DB::commit();
 
             return Response::getResponse(true, 'Meta editada com sucesso');
-        } catch (NotFoundException $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             LogInvoker::update(new ErrorLogBuilder)
-                        ->withPayload($request)
-                        ->save('GOAL', $e);
-            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch (Exception $e) {
-            DB::rollBack();
-            LogInvoker::update(new ErrorLogBuilder)
-                        ->withPayload($request)
+                        ->withPayload($dto->toArray())
                         ->save('GOAL', $e);
             return Response::getResponse(false, 'Metas não localizadas', code: 500);
         }
