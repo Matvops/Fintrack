@@ -21,13 +21,11 @@ class GoalsServiceTest extends MockeryTestCase {
 
     private GoalsService $service;
     private GoalRepository&MockInterface $goalRepository;
-    private UserRepository&MockInterface $userRepository;
 
     public function setUp(): void
     {
         $this->goalRepository = Mockery::mock(GoalRepository::class);
-        $this->userRepository = Mockery::mock(UserRepository::class);
-        $this->service = new GoalsService($this->userRepository, $this->goalRepository);
+        $this->service = new GoalsService($this->goalRepository);
     }
 
     

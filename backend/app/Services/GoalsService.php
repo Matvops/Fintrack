@@ -9,7 +9,6 @@ use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
 use App\Repositories\GoalRepository;
-use App\Repositories\UserRepository;
 use App\Utils\Functions;
 use App\Utils\Response;
 use Exception;
@@ -19,12 +18,10 @@ use Throwable;
 class GoalsService
 {
 
-    private UserRepository $userRepository;
     private GoalRepository $goalRepository;
 
-    public function __construct(UserRepository $userRepository, GoalRepository $goalRepository)
+    public function __construct(GoalRepository $goalRepository)
     {
-        $this->userRepository = $userRepository;
         $this->goalRepository = $goalRepository;
     }
 
