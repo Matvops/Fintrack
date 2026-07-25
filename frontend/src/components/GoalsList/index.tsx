@@ -18,18 +18,18 @@ export function GoalsList({ goals, setSelectedGoal, setModalEditVisible }: Goals
     if(goals.length === 0) return;
     
     return goals?.map((goal, index) => (
-      <div className={style.card} key={goal.gls_id + `-${index}`}>
+      <div className={style.card} key={goal.id + `-${index}`}>
         <div className={style.headerCard}>
 
           <div>
-            <h2 className={style.headerTitle}>{goal.gls_name}</h2>
+            <h2 className={style.headerTitle}>{goal.name}</h2>
             <span className={style.headerSubTitle}>{goal.percentage}% concluído</span>
           </div>
 
           <div className={style.cardValues}>
             <div>
-              <h2 className={`${style.headerTitle} ${style[goal.gls_color.toLowerCase()]}`}>{formatToReal(goal.gls_balance)}</h2>
-              <span className={style.headerSubTitle}>de {formatToReal(goal.gls_balance_target)}</span>
+              <h2 className={`${style.headerTitle} ${style[goal.color.toLowerCase()]}`}>{formatToReal(goal.balance)}</h2>
+              <span className={style.headerSubTitle}>de {formatToReal(goal.balanceTarget)}</span>
             </div>
             <button className={style.buttonEdit} onClick={() => {
                 setSelectedGoal(goal);
@@ -41,7 +41,7 @@ export function GoalsList({ goals, setSelectedGoal, setModalEditVisible }: Goals
           </div>
         </div>
 
-        <progress className={`${style.progressBar} ${style['background-' + goal.gls_color.toLocaleLowerCase()]}`} value={(goal.percentage ?? 0) / 100} />
+        <progress className={`${style.progressBar} ${style['background-' + goal.color.toLocaleLowerCase()]}`} value={(goal.percentage ?? 0) / 100} />
 
         <div>
           <span className={style.headerSubTitle}>Faltam {formatToReal(goal.missing?.toString() ?? '0')} para a meta</span>
