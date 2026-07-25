@@ -102,33 +102,20 @@ class GoalsService
 
             DB::beginTransaction();
 
-            $goal = $this->goalRepository->getGoalById($id);
-            
-            if(!$goal) throw new NotFoundException("Erro ao localizar meta");
-
-            $goal->delete();
+            $this->goalRepository->delete($id);
 
             LogInvoker::delete(new InfoLogBuilder)
                         ->withPayload(['id' => $id])
-                        ->withResponse($goal)
                         ->save('GOAL');
 
             DB::commit();
             return Response::getResponse(true, 'Meta excluída com sucesso');
-        } catch (NotFoundException $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             LogInvoker::delete(new ErrorLogBuilder)
                         ->withPayload(['id' => $id])
                         ->save('GOAL', $e);
-
-            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch (Exception $e) {
-            DB::rollBack();
-            LogInvoker::delete(new ErrorLogBuilder)
-                        ->withPayload(['id' => $id])
-                        ->save('GOAL', $e);
-                        
-            return Response::getResponse(false, 'Metas não localizadas', code: 500);
+            return Response::getResponse(false, 'Erro ao excluir a meta', code: 500);
         }
     }
 }
