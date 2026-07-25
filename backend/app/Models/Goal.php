@@ -16,6 +16,7 @@ class Goal extends Model
         'gls_name',
         'gls_balance',
         'gls_balance_target',
+        'gls_color',
         'created_at',
         'updated_at'
     ];
