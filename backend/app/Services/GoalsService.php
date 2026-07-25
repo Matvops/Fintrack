@@ -4,14 +4,13 @@ namespace App\Services;
 
 use App\Dto\Goal\CreateGoalDTO;
 use App\Dto\Goal\EditGoalDTO;
+use App\Dto\Goal\GoalDTO;
 use App\Exceptions\NotFoundException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
 use App\Repositories\GoalRepository;
-use App\Utils\Functions;
 use App\Utils\Response;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -54,15 +53,13 @@ class GoalsService
 
             if (count($goals) < 1) throw new NotFoundException("Sem metas");
 
-            foreach ($goals as $goal) {
-                $goal->percentage = Functions::getPercentage((float) $goal->gls_balance, (float) $goal->gls_balance_target);
-                $goal->missing =  $goal->gls_balance_target - $goal->gls_balance;
-            }
+            $dtos = [];
+            foreach ($goals as $goal) $dtos[] = GoalDTO::fromGoal($goal);
 
-            return Response::getResponse(true, 'Metas encontradas', $goals);
+            return Response::getResponse(true, 'Metas encontradas', $dtos);
         } catch (NotFoundException $e) {
             return Response::getResponse(false, $e->getMessage(), [], code: $e->getCode());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return Response::getResponse(false, 'Metas não localizadas', [], code: 500);
         }
     }
