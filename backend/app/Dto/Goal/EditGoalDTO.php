@@ -18,11 +18,11 @@ readonly class EditGoalDTO {
     public static function fromArray(array $array): self
     {
         return new self(
-            id: $array['gls_id'],
-            name: $array['gls_name'],
-            balance: Functions::formatValue($array['gls_balance']),
-            balanceTarget: Functions::formatValue($array['gls_balance_target']),
-            color: strtoupper($array['gls_color']),
+            id: $array['id'],
+            name: $array['name'],
+            balance: Functions::formatValue($array['balance']),
+            balanceTarget: Functions::formatValue($array['balanceTarget']),
+            color: strtoupper($array['color']),
         );
     }
 
