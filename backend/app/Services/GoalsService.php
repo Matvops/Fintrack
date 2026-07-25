@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
+use App\Dto\Goal\CreateGoalDTO;
 use App\Exceptions\NotFoundException;
-use App\Exceptions\ValidationException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
@@ -27,29 +27,15 @@ class GoalsService
         $this->goalRepository = $goalRepository;
     }
 
-
-    public function create(array $data): Response
+    public function create(CreateGoalDTO $dto): Response
     {
         try {
 
-            $user = $this->userRepository->getUserById($data['id']);
-
-            if (!isset($user)) throw new ValidationException('Erro ao criar meta', 404);
-
-            $balance = Functions::formatValue($data['balance']);
-            $balanceTarget = Functions::formatValue($data['balanceTarget']);
-
-            $goal = new Goal();
-            $goal->gls_use_id = $user->use_id;
-            $goal->gls_name = $data['name'];
-            $goal->gls_balance = $balance;
-            $goal->gls_balance_target = str_replace(',', '.', $balanceTarget);
-            $goal->gls_color = strtoupper($data['color']);
-            $goal->save();
+            $goal = $this->goalRepository->register($dto);
 
             LogInvoker::create(new InfoLogBuilder)
-                        ->withPayload($data)
-                        ->withPayload($goal)
+                        ->withPayload($dto->toArray())
+                        ->withResponse($goal)
                         ->save('GOAL');
 
 
