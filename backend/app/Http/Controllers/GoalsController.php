@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dto\Goal\CreateGoalDTO;
 use App\Http\Requests\Goals\CreateRequest;
 use App\Http\Requests\Goals\DeleteRequest;
 use App\Http\Requests\Goals\EditRequest;
@@ -21,15 +22,9 @@ class GoalsController extends Controller
     public function create(CreateRequest $request)
     {
 
-        $data = [
-            'id' => $request->input('id'),
-            'name' => $request->input('name'),
-            'balance' => $request->input('balance'),
-            'balanceTarget' => $request->input('balanceTarget'),
-            'color' => $request->input('color'),
-        ];
+        $dto = CreateGoalDTO::fromArray($request->validated());
 
-        $response = $this->service->create($data);
+        $response = $this->service->create($dto);
 
         return $this->sendResponse($response);
     }
