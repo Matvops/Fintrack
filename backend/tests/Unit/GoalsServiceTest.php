@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Dto\Goal\CreateGoalDTO;
+use App\Dto\Goal\EditGoalDTO;
 use App\Models\Goal;
 use App\Repositories\GoalRepository;
 use App\Repositories\UserRepository;
@@ -70,7 +71,7 @@ class GoalsServiceTest extends MockeryTestCase {
             'name' => 'VIAGEM',
             'balance' => 'R$ 2.200,00',
             'balanceTarget' => 'R$ 3.500,00',
-            'color' => 'ESMERALDA',
+            'color' => 'esmeralda',
         ]);
 
         $this->goalRepository->shouldReceive('register')
@@ -82,6 +83,94 @@ class GoalsServiceTest extends MockeryTestCase {
 
         $this->assertFalse($response->getStatus());
         $this->assertSame('Erro ao criar meta', $response->getMessage());
+        $this->assertSame(500, $response->getCode());
+    }
+
+    public function test_edit_goal_successfully(): void 
+    {
+        $log = Mockery::mock('alias:App\Logging\LogInvoker');
+        $log->shouldReceive('update->withPayload->withResponse->save')->andReturnNull();
+
+        $db = Mockery::mock('alias:Illuminate\Support\Facades\DB');
+        $db->shouldReceive('beginTransaction')->andReturnNull();
+        $db->shouldReceive('commit')->andReturnNull();
+
+        $oldGoal = new Goal();
+        $oldGoal->gls_id = 1;
+        $oldGoal->gls_name = 'Processador';
+        $oldGoal->gls_balance = 'R$ 993,20';
+        $oldGoal->gls_balance_target = 'R$ 2.400,22';
+        $oldGoal->gls_color = 'azul';
+
+        $dto = EditGoalDTO::fromArray([
+            'gls_id' => 1,
+            'gls_name' => 'Placa de Vídeo',
+            'gls_balance' => 'R$ 1.200,21',
+            'gls_balance_target' => 'R$ 4.230,44',
+            'gls_color' => 'violeta',
+        ]);
+
+        $newGoal = new Goal();
+        $newGoal->gls_id = 1;
+        $newGoal->gls_name = $dto->name;
+        $newGoal->gls_balance = $dto->balance;
+        $newGoal->gls_balance_target = $dto->balanceTarget;
+        $newGoal->gls_color = $dto->color;
+
+        $this->goalRepository->shouldReceive('getGoalById')
+                                ->once()
+                                ->with(1)                                       
+                                ->andReturn($oldGoal);
+
+        $this->goalRepository->shouldReceive('edit')
+                                ->once()
+                                ->with($oldGoal, $dto)
+                                ->andReturn($newGoal);
+        
+        $response = $this->service->edit($dto);
+
+        $this->assertTrue($response->getStatus());
+        $this->assertSame('Meta editada com sucesso', $response->getMessage());
+    }
+    
+    public function test_edit_goal_with_error(): void 
+    {
+        $log = Mockery::mock('alias:App\Logging\LogInvoker');
+        $log->shouldReceive('update->withPayload->save')->andReturnNull();
+
+        $db = Mockery::mock('alias:Illuminate\Support\Facades\DB');
+        $db->shouldReceive('beginTransaction')->andReturnNull();
+        $db->shouldReceive('rollback')->andReturnNull();
+
+        $oldGoal = new Goal();
+        $oldGoal->gls_id = 1;
+        $oldGoal->gls_name = 'Processador';
+        $oldGoal->gls_balance = 'R$ 993,20';
+        $oldGoal->gls_balance_target = 'R$ 2.400,22';
+        $oldGoal->gls_color = 'azul';
+
+        $dto = EditGoalDTO::fromArray([
+            'gls_id' => 1,
+            'gls_name' => 'Placa de Vídeo',
+            'gls_balance' => 'R$ 1.200,21',
+            'gls_balance_target' => 'R$ 4.230,44',
+            'gls_color' => 'violeta',
+        ]);
+
+        $this->goalRepository->shouldReceive('getGoalById')
+                                ->once()
+                                ->with(1)                                       
+                                ->andReturn($oldGoal);
+
+        $this->goalRepository->shouldReceive('edit')
+                                ->once()
+                                ->with($oldGoal, $dto)
+                                ->andThrow(TypeError::class);
+        
+        $response = $this->service->edit($dto);
+
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Metas não localizadas', $response->getMessage());
         $this->assertSame(500, $response->getCode());
     }
 }
