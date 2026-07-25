@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use App\Dto\Goal\CreateGoalDTO;
+use App\Dto\Goal\EditGoalDTO;
 use App\Exceptions\NotFoundException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
-use App\Models\Goal;
 use App\Repositories\GoalRepository;
 use App\Repositories\UserRepository;
 use App\Utils\Functions;
@@ -70,7 +70,7 @@ class GoalsService
         }
     }
 
-    public function edit(array $request): Response
+    public function edit(EditGoalDTO $dto): Response
     {
         try {
 
