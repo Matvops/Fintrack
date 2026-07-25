@@ -9,6 +9,7 @@ use App\Repositories\GoalRepository;
 use App\Repositories\UserRepository;
 use App\Services\GoalsService;
 use Exception;
+use LogicException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
@@ -171,6 +172,49 @@ class GoalsServiceTest extends MockeryTestCase {
 
         $this->assertFalse($response->getStatus());
         $this->assertSame('Metas não localizadas', $response->getMessage());
+        $this->assertSame(500, $response->getCode());
+    }
+
+    public function test_delete_goal_successfully(): void 
+    {
+        $log = Mockery::mock('alias:App\Logging\LogInvoker');
+        $log->shouldReceive('delete->withPayload->save')->andReturnNull();
+
+        $db = Mockery::mock('alias:Illuminate\Support\Facades\DB');
+        $db->shouldReceive('beginTransaction')->andReturnNull();
+        $db->shouldReceive('commit')->andReturnNull();
+
+        $id = 1;
+        $this->goalRepository->shouldReceive('delete')
+                            ->once()
+                            ->with($id)
+                            ->andReturnNull();
+
+        $response = $this->service->delete($id);
+        
+        $this->assertTrue($response->getStatus());
+        $this->assertSame('Meta excluída com sucesso', $response->getMessage());
+    }
+
+    public function test_delete_goal_with_error(): void 
+    {
+        $log = Mockery::mock('alias:App\Logging\LogInvoker');
+        $log->shouldReceive('delete->withPayload->save')->andReturnNull();
+
+        $db = Mockery::mock('alias:Illuminate\Support\Facades\DB');
+        $db->shouldReceive('beginTransaction')->andReturnNull();
+        $db->shouldReceive('rollback')->andReturnNull();
+
+        $id = 1;
+        $this->goalRepository->shouldReceive('delete')
+                            ->once()
+                            ->with($id)
+                            ->andThrow(LogicException::class);
+
+        $response = $this->service->delete($id);
+        
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Erro ao excluir a meta', $response->getMessage());
         $this->assertSame(500, $response->getCode());
     }
 }
