@@ -14,6 +14,7 @@ use App\Utils\Functions;
 use App\Utils\Response;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class GoalsService
 {
@@ -38,16 +39,10 @@ class GoalsService
                         ->withResponse($goal)
                         ->save('GOAL');
 
-
             return Response::getResponse(true, 'Meta criada com sucesso');
-        } catch (ValidationException $e) {
+        } catch (Throwable $e) {
             LogInvoker::create(new ErrorLogBuilder)
-                        ->withPayload($data)
-                        ->save('GOAL', $e);
-            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch (Exception $e) {
-            LogInvoker::create(new ErrorLogBuilder)
-                        ->withPayload($data)
+                        ->withPayload($dto->toArray())
                         ->save('GOAL', $e);
             return Response::getResponse(false, 'Erro ao criar meta', code: 500);
         }
