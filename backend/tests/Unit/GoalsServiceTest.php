@@ -4,17 +4,18 @@ namespace Tests\Unit;
 
 use App\Dto\Goal\CreateGoalDTO;
 use App\Dto\Goal\EditGoalDTO;
+use App\Exceptions\NotFoundException;
 use App\Models\Goal;
 use App\Repositories\GoalRepository;
-use App\Repositories\UserRepository;
 use App\Services\GoalsService;
+use App\Utils\Functions;
+use Error;
 use Exception;
 use LogicException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use TypeError;
 
 #[RunTestsInSeparateProcesses]
 class GoalsServiceTest extends MockeryTestCase {
@@ -27,7 +28,6 @@ class GoalsServiceTest extends MockeryTestCase {
         $this->goalRepository = Mockery::mock(GoalRepository::class);
         $this->service = new GoalsService($this->goalRepository);
     }
-
     
     public function test_create_goal_successfully(): void 
     {
@@ -97,15 +97,15 @@ class GoalsServiceTest extends MockeryTestCase {
         $oldGoal = new Goal();
         $oldGoal->gls_id = 1;
         $oldGoal->gls_name = 'Processador';
-        $oldGoal->gls_balance = 'R$ 993,20';
-        $oldGoal->gls_balance_target = 'R$ 2.400,22';
+        $oldGoal->gls_balance = 993.20;
+        $oldGoal->gls_balance_target = 2400.22;
         $oldGoal->gls_color = 'azul';
 
         $dto = EditGoalDTO::fromArray([
             'gls_id' => 1,
             'gls_name' => 'Placa de Vídeo',
-            'gls_balance' => 'R$ 1.200,21',
-            'gls_balance_target' => 'R$ 4.230,44',
+            'gls_balance' => 1200.21,
+            'gls_balance_target' => 4230.44,
             'gls_color' => 'violeta',
         ]);
 
@@ -144,8 +144,8 @@ class GoalsServiceTest extends MockeryTestCase {
         $oldGoal = new Goal();
         $oldGoal->gls_id = 1;
         $oldGoal->gls_name = 'Processador';
-        $oldGoal->gls_balance = 'R$ 993,20';
-        $oldGoal->gls_balance_target = 'R$ 2.400,22';
+        $oldGoal->gls_balance = 933.20;
+        $oldGoal->gls_balance_target = 2400.22;
         $oldGoal->gls_color = 'azul';
 
         $dto = EditGoalDTO::fromArray([
@@ -164,7 +164,7 @@ class GoalsServiceTest extends MockeryTestCase {
         $this->goalRepository->shouldReceive('edit')
                                 ->once()
                                 ->with($oldGoal, $dto)
-                                ->andThrow(TypeError::class);
+                                ->andThrow(Error::class);
         
         $response = $this->service->edit($dto);
 
@@ -213,6 +213,132 @@ class GoalsServiceTest extends MockeryTestCase {
         
         $this->assertFalse($response->getStatus());
         $this->assertSame('Erro ao excluir a meta', $response->getMessage());
+        $this->assertSame(500, $response->getCode());
+    }
+
+    public function test_get_goals_successfully(): void 
+    {
+        
+        $goals = [];
+
+        
+        $id = 1;
+        for ($i = 1; $i <= 10; $i++) { 
+            $goal = new Goal();
+            $goal->setRawAttributes([
+                'gls_id' => $i,
+                'gls_use_id' => $id,
+                'gls_name' => "GOAL $i",
+                'gls_balance' => 200 * $i,
+                'gls_balance_target' => 300 * $i,
+                'gls_color' => 'VIOLETA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            array_push($goals, $goal);
+        }
+
+
+        $this->goalRepository->shouldReceive('getGoalsByUseId')
+                                ->once()
+                                ->with($id)
+                                ->andReturn($goals);
+
+        $response = $this->service->getGoals($id);
+        
+        $this->assertTrue($response->getStatus());
+        $this->assertSame('Metas encontradas', $response->getMessage());
+        $this->assertSame(10, count($response->getData()));
+    }
+
+    public function test_get_goals_if_missing_and_percentage_attributes_on_dto_is_correctly(): void
+    {
+        $goals = [];
+        
+        $id = 1;
+        for ($i = 1; $i <= 5; $i++) { 
+            $goal = new Goal();
+            $goal->setRawAttributes([
+                'gls_id' => $i,
+                'gls_use_id' => $id,
+                'gls_name' => "GOAL $i",
+                'gls_balance' => 200 * $i,
+                'gls_balance_target' => 300 * $i,
+                'gls_color' => 'VIOLETA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            array_push($goals, $goal);
+        }
+
+        $this->goalRepository->shouldReceive('getGoalsByUseId')
+                                ->once()
+                                ->with($id)
+                                ->andReturn($goals);
+
+        $response = $this->service->getGoals($id);
+        $dtos = $response->getData();
+        for ($i = 0; $i < count($goals); $i++) { 
+            $missing = floatval($goals[$i]->gls_balance_target - $goals[$i]->gls_balance);
+            $this->assertSame($missing, $dtos[$i]->missing);
+            
+            $percentage =  Functions::getPercentage((float) $goals[$i]->gls_balance, (float) $goals[$i]->gls_balance_target);
+            $this->assertSame($percentage, $dtos[$i]->percentage);
+        }
+    }
+
+    public function test_get_goals_without_goals(): void 
+    {
+        $id = 1;
+
+        $this->goalRepository->shouldReceive('getGoalsByUseId')
+                                ->once()
+                                ->with($id)
+                                ->andReturn([]);
+
+        $response = $this->service->getGoals($id);
+        
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Sem metas', $response->getMessage());
+        $this->assertSame((new NotFoundException())->getCode(), $response->getCode());
+    }
+
+    public function test_get_goals_with_error(): void 
+    {
+        $goals = [];
+
+        
+        $id = 1;
+        for ($i = 1; $i <= 1; $i++) { 
+            $goal = new Goal();
+            $goal->setRawAttributes([
+                'gls_id' => $i,
+                'gls_use_id' => $id,
+                'gls_name' => "GOAL $i",
+                'gls_balance' => 200 * $i,
+                'gls_balance_target' => 300 * $i,
+                'gls_color' => 'VIOLETA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            array_push($goals, $goal);
+        }
+
+        $this->goalRepository->shouldReceive('getGoalsByUseId')
+                                ->once()
+                                ->with($id)
+                                ->andReturn($goals);
+
+        $dto = Mockery::mock('alias:App\Dto\Goal\GoalDTO');
+        $dto->shouldReceive('fromGoal')->andThrow(Error::class);
+
+        $response = $this->service->getGoals($id);
+        
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Metas não localizadas', $response->getMessage());
         $this->assertSame(500, $response->getCode());
     }
 }
