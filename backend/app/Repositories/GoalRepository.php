@@ -41,4 +41,10 @@ class GoalRepository {
 
         return $goal;
     }
+
+    public function delete(int $id): void
+    {
+        $goal = $this->getGoalById($id);        
+        $goal->delete();
+    }
 }
