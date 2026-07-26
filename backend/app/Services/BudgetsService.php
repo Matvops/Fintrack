@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Dto\Budget\CreateBudgetDTO;
+use App\Dto\Budget\EditBudgetDTO;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\PermissionDeniedException;
 use App\Logging\ErrorLogBuilder;
@@ -117,30 +118,27 @@ class BudgetsService {
         }
     }
 
-    public function edit(array $data): Response
+    public function edit(EditBudgetDTO $dto): Response
     {
         try {
 
             DB::beginTransaction();
 
-            $budget = $this->budgetRepository->getBudgetById($data['bdt_id']);
-            $budget->bdt_name = $data['bdt_name'];
-            $budget->bdt_limit = Functions::formatValue($data['bdt_limit']);
-            $budget->bdt_color = strtoupper($data['bdt_color']);
-            $budget->save();
+            $budget = $this->budgetRepository->getBudgetById($dto->id);
+            $this->budgetRepository->edit($dto, $budget);
 
             LogInvoker::update(new InfoLogBuilder)
-                        ->withPayload($data)
+                        ->withPayload($dto->toArray())
                         ->withResponse($budget)
                         ->save('BUDGET');
 
             DB::commit();
             return Response::getResponse(true, 'Orçamento editado com sucesso');
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
 
             LogInvoker::update(new ErrorLogBuilder)
-                        ->withPayload($data)
+                        ->withPayload($dto->toArray())
                         ->save('BUDGET', $e);
 
             return Response::getResponse(false, 'Orçamento não localizado', code: 500);
