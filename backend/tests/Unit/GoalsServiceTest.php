@@ -281,7 +281,7 @@ class GoalsServiceTest extends MockeryTestCase {
         $response = $this->service->getGoals($id);
         $dtos = $response->getData();
         for ($i = 0; $i < count($goals); $i++) { 
-            $missing = floatval($goals[$i]->gls_balance_target - $goals[$i]->gls_balance);
+            $missing = number_format($goals[$i]->gls_balance_target - $goals[$i]->gls_balance, 2, '.', '');
             $this->assertSame($missing, $dtos[$i]->missing);
             
             $percentage =  Functions::getPercentage((float) $goals[$i]->gls_balance, (float) $goals[$i]->gls_balance_target);
