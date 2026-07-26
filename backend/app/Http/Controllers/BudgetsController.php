@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dto\Budget\CreateBudgetDTO;
+use App\Dto\Budget\EditBudgetDTO;
 use App\Http\Requests\Budgets\CreateRequest;
 use App\Http\Requests\Budgets\DeleteRequest;
 use App\Http\Requests\Budgets\EditRequest;
@@ -50,14 +51,9 @@ class BudgetsController extends Controller {
 
     public function edit(EditRequest $request) {
         
-        $dados = [
-            'bdt_id' => $request->input('bdt_id'),
-            'bdt_name' => $request->input('bdt_name'),
-            'bdt_color' => $request->input('bdt_color'),
-            'bdt_limit' => $request->input('bdt_limit'),
-        ];
+        $dto = EditBudgetDTO::fromArray($request->validated());
 
-        $response = $this->service->edit($dados);
+        $response = $this->service->edit($dto);
 
         return $this->sendResponse($response);
     }
