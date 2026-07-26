@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Dto\Budget\CreateBudgetDTO;
 use App\Http\Requests\Budgets\CreateRequest;
 use App\Http\Requests\Budgets\DeleteRequest;
 use App\Http\Requests\Budgets\EditRequest;
@@ -19,14 +20,9 @@ class BudgetsController extends Controller {
 
     public function create(CreateRequest $request) {
         
-        $dados = [
-            'id' => $request->input('id'),
-            'name' => $request->input('name'),
-            'limit' => $request->input('limit'),
-            'color' => $request->input('color'),
-        ];
+        $dto = CreateBudgetDTO::fromArray($request->validated());
 
-        $response = $this->service->create($dados);
+        $response = $this->service->create($dto);
 
         return $this->sendResponse($response);
     }
