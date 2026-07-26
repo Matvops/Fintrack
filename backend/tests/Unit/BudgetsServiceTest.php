@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Dto\Budget\CreateBudgetDTO;
+use App\Dto\Budget\EditBudgetDTO;
 use App\Models\Budget;
 use App\Repositories\BudgetRepository;
 use App\Repositories\TransactionRepository;
@@ -11,7 +12,9 @@ use Error;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
+#[RunTestsInSeparateProcesses]
 class BudgetsServiceTest extends MockeryTestCase {
 
     private BudgetsService $service;
@@ -77,5 +80,99 @@ class BudgetsServiceTest extends MockeryTestCase {
 
         $this->assertFalse($response->getStatus());
         $this->assertSame('Erro ao criar novo orçamento', $response->getMessage());
+    }
+
+    public function test_edit_budget_successfully(): void 
+    {
+
+        $log = Mockery::mock('alias:App\Logging\LogInvoker');
+        $log->shouldReceive('update->withPayload->withResponse->save');
+        
+        $db = Mockery::mock('alias:Illuminate\Support\Facades\DB');
+        $db->shouldReceive('beginTransaction')->andReturnNull();
+        $db->shouldReceive('commit')->andReturnNull();
+
+        $dto = EditBudgetDTO::fromArray([
+            'bdt_id' => 1,
+            'bdt_name' => 'Transporte',
+            'bdt_limit' => '4.230,23',
+            'bdt_color' => 'violeta',
+        ]);
+
+        $oldBudget = new Budget();
+        $oldBudget->setRawAttributes([
+            'bdt_name'  => 'Alimentação',
+            'bdt_limit' => 3564.22,
+            'bdt_color' => 'ESMERALDA',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        $newBudget = new Budget();
+        $newBudget->setRawAttributes([
+            'bdt_name'  => $dto->name,
+            'bdt_limit' => $dto->limit,
+            'bdt_color' => $dto->color,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        $this->budgetRepository->shouldReceive('getBudgetById')
+                                ->once()
+                                ->with($dto->id)
+                                ->andReturn($oldBudget);
+
+        $this->budgetRepository->shouldReceive('edit')
+                                ->once()
+                                ->with($dto, $oldBudget)
+                                ->andReturn($newBudget);
+            
+        $response = $this->service->edit($dto);
+        
+        $this->assertTrue($response->getStatus());
+        $this->assertSame('Orçamento editado com sucesso', $response->getMessage());
+    }
+
+    public function test_edit_budget_with_error(): void 
+    {
+
+        $log = Mockery::mock('alias:App\Logging\LogInvoker');
+        $log->shouldReceive('update->withPayload->save');
+        
+        $db = Mockery::mock('alias:Illuminate\Support\Facades\DB');
+        $db->shouldReceive('beginTransaction')->andReturnNull();
+        $db->shouldReceive('rollback')->andReturnNull();
+
+        $dto = EditBudgetDTO::fromArray([
+            'bdt_id' => 1,
+            'bdt_name' => 'Transporte',
+            'bdt_limit' => '4.230,23',
+            'bdt_color' => 'violeta',
+        ]);
+
+        $oldBudget = new Budget();
+        $oldBudget->setRawAttributes([
+            'bdt_name'  => 'Alimentação',
+            'bdt_limit' => 3564.22,
+            'bdt_color' => 'ESMERALDA',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        $this->budgetRepository->shouldReceive('getBudgetById')
+                                ->once()
+                                ->with($dto->id)
+                                ->andReturn($oldBudget);
+
+        $this->budgetRepository->shouldReceive('edit')
+                                ->once()
+                                ->with($dto, $oldBudget)
+                                ->andThrow(Error::class);
+            
+        $response = $this->service->edit($dto);
+        
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Orçamento não localizado', $response->getMessage());
+        $this->assertSame(500, $response->getCode());
     }
 }
