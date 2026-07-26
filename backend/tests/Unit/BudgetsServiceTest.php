@@ -175,4 +175,95 @@ class BudgetsServiceTest extends MockeryTestCase {
         $this->assertSame('Orçamento não localizado', $response->getMessage());
         $this->assertSame(500, $response->getCode());
     }
+
+    public function test_delete_successfully(): void 
+    {
+        $log = Mockery::mock('alias:App\Logging\LogInvoker');
+        $log->shouldReceive('delete->withPayload->withResponse->save');
+        
+        $db = Mockery::mock('alias:Illuminate\Support\Facades\DB');
+        $db->shouldReceive('beginTransaction')->andReturnNull();
+        $db->shouldReceive('commit')->andReturnNull();
+
+        $budget = Mockery::mock(Budget::class);
+
+        $id = 1;
+        $this->budgetRepository->shouldReceive('getBudgetById')
+                                ->once()
+                                ->with($id)
+                                ->andReturn($budget);
+
+        $budget->shouldReceive('transactions')
+                ->once()
+                ->andReturnNull();
+
+        $budget->shouldReceive('delete')->andReturnTrue();
+
+
+        $response = $this->service->delete($id);
+
+        $this->assertTrue($response->getStatus());
+        $this->assertSame('Orçamento excluído com sucesso', $response->getMessage());
+    }
+
+    public function test_delete_with_transactions_linked_budget(): void 
+    {
+        $log = Mockery::mock('alias:App\Logging\LogInvoker');
+        $log->shouldReceive('delete->withPayload->save');
+        
+        $db = Mockery::mock('alias:Illuminate\Support\Facades\DB');
+        $db->shouldReceive('beginTransaction')->andReturnNull();
+        $db->shouldReceive('rollback')->andReturnNull();
+
+        $budget = Mockery::mock(Budget::class);
+
+        $id = 1;
+        $this->budgetRepository->shouldReceive('getBudgetById')
+                                ->once()
+                                ->with($id)
+                                ->andReturn($budget);
+
+        $budget->shouldReceive('transactions')
+                ->once()
+                ->andReturn(['TRANSACTION1', 'TRANSACTION2', 'TRANSACTION3']);
+
+        $budget->shouldReceive('delete')->andReturnTrue();
+
+
+        $response = $this->service->delete($id);
+
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Esta categoria possui transações cadastradas', $response->getMessage());
+        $this->assertSame(403, $response->getCode());
+    }
+    
+    public function test_delete_with_error(): void 
+    {
+        $log = Mockery::mock('alias:App\Logging\LogInvoker');
+        $log->shouldReceive('delete->withPayload->save');
+        
+        $db = Mockery::mock('alias:Illuminate\Support\Facades\DB');
+        $db->shouldReceive('beginTransaction')->andReturnNull();
+        $db->shouldReceive('rollback')->andReturnNull();
+
+        $budget = Mockery::mock(Budget::class);
+
+        $id = 1;
+        $this->budgetRepository->shouldReceive('getBudgetById')
+                                ->once()
+                                ->with($id)
+                                ->andReturn($budget);
+
+        $budget->shouldReceive('transactions')
+                ->once()
+                ->andReturnNull();
+
+        $budget->shouldReceive('delete')->andThrow(Error::class);
+
+        $response = $this->service->delete($id);
+
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Orçamento não localizado', $response->getMessage());
+        $this->assertSame(500, $response->getCode());
+    }
 }
