@@ -32,4 +32,14 @@ class BudgetRepository {
 
         return $budget;
     }
+    
+    public function edit(EditBudgetDTO $dto, Budget $budget): Budget
+    {
+        $budget->bdt_name = $dto->name;
+        $budget->bdt_limit = $dto->limit;
+        $budget->bdt_color = $dto->color;
+        $budget->save();
+
+        return $budget;
+    }
 }
