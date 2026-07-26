@@ -2,18 +2,19 @@
 
 namespace App\Services;
 
+use App\Dto\Budget\CreateBudgetDTO;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\PermissionDeniedException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
-use App\Models\Budget;
 use App\Repositories\BudgetRepository;
 use App\Repositories\TransactionRepository;
 use App\Utils\Functions;
 use App\Utils\Response;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class BudgetsService {
 
@@ -27,27 +28,21 @@ class BudgetsService {
     }
 
 
-    public function create(array $request): Response
+    public function create(CreateBudgetDTO $dto): Response
     {
         try {
             
-            $budget = new Budget();
-            $budget->bdt_use_id = $request['id'];
-            $budget->bdt_name = $request['name'];
-            $budget->bdt_limit = Functions::formatValue($request['limit']);
-            $budget->bdt_color = strtoupper($request['color']);
-            $budget->bdt_current_expense = 0;
-            $budget->save();
+           $budget = $this->budgetRepository->register($dto);
 
             LogInvoker::create(new InfoLogBuilder)
-                        ->withPayload($request)
+                        ->withPayload($dto->toArray())
                         ->withResponse($budget)
                         ->save('BUDGET');
 
             return Response::getResponse(true, 'Orçamento criado com sucesso', code: 201);
-        } catch(Exception $e) {
+        } catch(Throwable $e) {
             LogInvoker::create(new ErrorLogBuilder)
-                        ->withPayload($request)
+                        ->withPayload($dto->toArray())
                         ->save('BUDGET', $e);
             return Response::getResponse(false, 'Erro ao criar novo orçamento', code: $e->getCode());
         }
