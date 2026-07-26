@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Dto\Budget\CreateBudgetDTO;
+use App\Dto\Budget\EditBudgetDTO;
 use App\Models\Budget;
 
 class BudgetRepository {
