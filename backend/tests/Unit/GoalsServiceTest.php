@@ -102,11 +102,11 @@ class GoalsServiceTest extends MockeryTestCase {
         $oldGoal->gls_color = 'azul';
 
         $dto = EditGoalDTO::fromArray([
-            'gls_id' => 1,
-            'gls_name' => 'Placa de Vídeo',
-            'gls_balance' => 1200.21,
-            'gls_balance_target' => 4230.44,
-            'gls_color' => 'violeta',
+            'id' => 1,
+            'name' => 'Placa de Vídeo',
+            'balance' => 1200.21,
+            'balanceTarget' => 4230.44,
+            'color' => 'violeta',
         ]);
 
         $newGoal = new Goal();
@@ -149,11 +149,11 @@ class GoalsServiceTest extends MockeryTestCase {
         $oldGoal->gls_color = 'azul';
 
         $dto = EditGoalDTO::fromArray([
-            'gls_id' => 1,
-            'gls_name' => 'Placa de Vídeo',
-            'gls_balance' => 'R$ 1.200,21',
-            'gls_balance_target' => 'R$ 4.230,44',
-            'gls_color' => 'violeta',
+            'id' => 1,
+            'name' => 'Placa de Vídeo',
+            'balance' => 'R$ 1.200,21',
+            'balanceTarget' => 'R$ 4.230,44',
+            'color' => 'violeta',
         ]);
 
         $this->goalRepository->shouldReceive('getGoalById')
