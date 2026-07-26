@@ -17,7 +17,7 @@ readonly class GoalDTO {
         public string $created_at,
         public string $updated_at,
         public float $percentage,
-        public float $missing,
+        public string $missing,
     )
     {}
 
@@ -33,7 +33,7 @@ readonly class GoalDTO {
             created_at: $goal->created_at,
             updated_at: $goal->updated_at,
             percentage: Functions::getPercentage((float) $goal->gls_balance, (float) $goal->gls_balance_target),
-            missing: floatval($goal->gls_balance_target - $goal->gls_balance),
+            missing: number_format($goal->gls_balance_target - $goal->gls_balance, 2, '.', ''),
         );
     }
 
