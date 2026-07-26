@@ -84,8 +84,6 @@ class BudgetsService {
 
             $budget = $this->budgetRepository->getBudgetById($id);
 
-            if(!$budget) throw new NotFoundException('Orçamento não encontrado');
-
             $transactions = $budget->transactions();
 
             if($transactions) throw new PermissionDeniedException('Esta categoria possui transações cadastradas');
@@ -99,7 +97,7 @@ class BudgetsService {
 
             DB::commit();
             return Response::getResponse(true, 'Orçamento excluído com sucesso');
-        } catch (NotFoundException|PermissionDeniedException $e) {
+        } catch (PermissionDeniedException $e) {
             DB::rollBack();
 
             LogInvoker::delete(new ErrorLogBuilder)
@@ -107,7 +105,7 @@ class BudgetsService {
                         ->save('BUDGET', $e);
 
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             
             LogInvoker::delete(new ErrorLogBuilder)
