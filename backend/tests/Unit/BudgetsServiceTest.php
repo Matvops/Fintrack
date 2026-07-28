@@ -8,6 +8,7 @@ use App\Models\Budget;
 use App\Repositories\BudgetRepository;
 use App\Repositories\TransactionRepository;
 use App\Services\BudgetsService;
+use App\Utils\Functions;
 use Error;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -265,5 +266,259 @@ class BudgetsServiceTest extends MockeryTestCase {
         $this->assertFalse($response->getStatus());
         $this->assertSame('Orçamento não localizado', $response->getMessage());
         $this->assertSame(500, $response->getCode());
+
+    }
+
+    public function test_get_budgets_successfully(): void 
+    {
+        $now = round(microtime(true) * 1000);
+
+        $initialDate = Functions::getInitialDateOfMonth($now);
+        $finishDate = Functions::getFinishDateOfMonth($now);
+
+        $id = 1;
+        $budgets = [];
+        for ($i = 1; $i <= 3; $i++) { 
+            $budget = new Budget();
+            $budget->setRawAttributes([
+                'bdt_id' => $i,
+                'bdt_use_id' => $id,
+                'bdt_name' => "TESTE $id",    
+                'bdt_limit' => 200 * $i,    
+                'bdt_current_expense' => 0,    
+                'bdt_color' => 'AZUL',    
+                'created_at' => now(),    
+                'updated_at' => now(),    
+            ]);
+            $budgets[] = $budget;
+        }
+
+        $this->budgetRepository->shouldReceive('getBudgetsByUseId')
+                                ->once()
+                                ->with($id, $initialDate, $finishDate)
+                                ->andReturn($budgets);
+
+        $transactions = [
+            ['tra_value' => 300.00],
+            ['tra_value' => 40.20],
+            ['tra_value' => 2300.44],
+            ['tra_value' => 1100.02]
+        ];
+
+        foreach ($budgets as $budget) {
+            $this->transactionRepository->shouldReceive('getTransactionsByBudgetId')
+                                            ->once()
+                                            ->with($budget->bdt_id, $initialDate, $finishDate)
+                                            ->andReturn($transactions);
+        }
+
+        $response = $this->service->get(['id' => $id, 'date' => $now]);
+
+        $this->assertTrue($response->getStatus());
+        $this->assertSame('Orçamentos encontrados', $response->getMessage());
+        $this->assertSame(3, count($response->getData()));
+    }
+
+    public function test_get_budgets_amount_spent_attribute(): void 
+    {
+        $now = round(microtime(true) * 1000);
+
+        $initialDate = Functions::getInitialDateOfMonth($now);
+        $finishDate = Functions::getFinishDateOfMonth($now);
+
+        $id = 1;
+        $budgets = [];
+        for ($i = 1; $i <= 3; $i++) { 
+            $budget = new Budget();
+            $budget->setRawAttributes([
+                'bdt_id' => $i,
+                'bdt_use_id' => $id,
+                'bdt_name' => "TESTE $id",    
+                'bdt_limit' => 200 * $i,    
+                'bdt_current_expense' => 0,    
+                'bdt_color' => 'AZUL',    
+                'created_at' => now(),    
+                'updated_at' => now(),    
+            ]);
+            $budgets[] = $budget;
+        }
+
+        $this->budgetRepository->shouldReceive('getBudgetsByUseId')
+                                ->once()
+                                ->with($id, $initialDate, $finishDate)
+                                ->andReturn($budgets);
+
+        $transactions = [
+            ['tra_value' => 300.00],
+            ['tra_value' => 40.20],
+            ['tra_value' => 2300.44],
+            ['tra_value' => 1100.02]
+        ];
+
+        foreach ($budgets as $budget) {
+            $this->transactionRepository->shouldReceive('getTransactionsByBudgetId')
+                                            ->once()
+                                            ->with($budget->bdt_id, $initialDate, $finishDate)
+                                            ->andReturn($transactions);
+        }
+
+        $response = $this->service->get(['id' => $id, 'date' => $now]);
+
+        $this->assertSame(strval(array_reduce($transactions, fn ($carry, $item) => $carry + $item['tra_value'], 0)), $response->getData()[0]->amountSpent);
+    }
+
+    public function test_get_budgets_remaining_value_attribute(): void 
+    {
+        $now = round(microtime(true) * 1000);
+
+        $initialDate = Functions::getInitialDateOfMonth($now);
+        $finishDate = Functions::getFinishDateOfMonth($now);
+
+        $id = 1;
+        $budgets = [];
+        for ($i = 1; $i <= 3; $i++) { 
+            $budget = new Budget();
+            $budget->setRawAttributes([
+                'bdt_id' => $i,
+                'bdt_use_id' => $id,
+                'bdt_name' => "TESTE $id",    
+                'bdt_limit' => 200 * $i,    
+                'bdt_current_expense' => 0,    
+                'bdt_color' => 'AZUL',    
+                'created_at' => now(),    
+                'updated_at' => now(),    
+            ]);
+            $budgets[] = $budget;
+        }
+
+        $this->budgetRepository->shouldReceive('getBudgetsByUseId')
+                                ->once()
+                                ->with($id, $initialDate, $finishDate)
+                                ->andReturn($budgets);
+
+        $transactions = [
+            ['tra_value' => 300.00],
+            ['tra_value' => 40.20],
+            ['tra_value' => 2300.44],
+            ['tra_value' => 1100.02]
+        ];
+
+        foreach ($budgets as $budget) {
+            $this->transactionRepository->shouldReceive('getTransactionsByBudgetId')
+                                            ->once()
+                                            ->with($budget->bdt_id, $initialDate, $finishDate)
+                                            ->andReturn($transactions);
+        }
+
+        $response = $this->service->get(['id' => $id, 'date' => $now]);
+
+        $amountSpent = strval(array_reduce($transactions, fn ($carry, $item) => $carry + $item['tra_value'], 0));
+        $limit = $budgets[0]->bdt_limit;
+
+        $this->assertSame(strval($limit - $amountSpent), $response->getData()[0]->remainingValue);
+    }
+
+    public function test_get_budgets_succesfully_without_transactions(): void 
+    {
+        $now = round(microtime(true) * 1000);
+
+        $initialDate = Functions::getInitialDateOfMonth($now);
+        $finishDate = Functions::getFinishDateOfMonth($now);
+
+        $id = 1;
+        $budgets = [];
+        for ($i = 1; $i <= 3; $i++) { 
+            $budget = new Budget();
+            $budget->setRawAttributes([
+                'bdt_id' => $i,
+                'bdt_use_id' => $id,
+                'bdt_name' => "TESTE $id",    
+                'bdt_limit' => 200 * $i,    
+                'bdt_current_expense' => 0,    
+                'bdt_color' => 'AZUL',    
+                'created_at' => now(),    
+                'updated_at' => now(),    
+            ]);
+            $budgets[] = $budget;
+        }
+
+        $this->budgetRepository->shouldReceive('getBudgetsByUseId')
+                                ->once()
+                                ->with($id, $initialDate, $finishDate)
+                                ->andReturn($budgets);
+
+        $transactions = [];
+
+        foreach ($budgets as $budget) {
+            $this->transactionRepository->shouldReceive('getTransactionsByBudgetId')
+                                            ->once()
+                                            ->with($budget->bdt_id, $initialDate, $finishDate)
+                                            ->andReturn($transactions);
+        }
+
+        $response = $this->service->get(['id' => $id, 'date' => $now]);
+
+        $this->assertTrue($response->getStatus());
+        $this->assertSame('Orçamentos encontrados', $response->getMessage());
+        $this->assertSame(3, count($response->getData()));
+    }
+
+    public function test_get_budgets_without_budgets(): void 
+    {
+        $now = round(microtime(true) * 1000);
+
+        $initialDate = Functions::getInitialDateOfMonth($now);
+        $finishDate = Functions::getFinishDateOfMonth($now);
+        $id = 1;
+
+        $this->budgetRepository->shouldReceive('getBudgetsByUseId')
+                                ->once()
+                                ->with($id, $initialDate, $finishDate)
+                                ->andReturn([]);
+
+        $response = $this->service->get(['id' => $id, 'date' => $now]);
+
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Sem Orçamentos', $response->getMessage());
+    }
+
+    public function test_get_budgets_with_error(): void 
+    {
+        $now = round(microtime(true) * 1000);
+
+        $id = 1;
+        $budgets = [];
+        for ($i = 1; $i <= 3; $i++) { 
+            $budget = new Budget();
+            $budget->setRawAttributes([
+                'bdt_id' => $i,
+                'bdt_use_id' => $id,
+                'bdt_name' => "TESTE $id",    
+                'bdt_limit' => 200 * $i,    
+                'bdt_current_expense' => 0,    
+                'bdt_color' => 'AZUL',    
+                'created_at' => now(),    
+                'updated_at' => now(),    
+            ]);
+            $budgets[] = $budget;
+        }
+
+        $this->budgetRepository->shouldReceive('getBudgetsByUseId')->andReturn($budgets);
+
+        $transactions = [];
+
+        foreach ($budgets as $budget) {
+            $this->transactionRepository->shouldReceive('getTransactionsByBudgetId')->andReturn($transactions);
+        }
+
+        $budgetDTO = Mockery::mock('alias:App\Dto\Budget\BudgetDTO');
+        $budgetDTO->shouldReceive('fromBudget')
+                    ->once()
+                    ->andThrow(Error::class);
+
+        $response = $this->service->get(['id' => $id, 'date' => $now]);
+
+        $this->assertFalse($response->getStatus());
+        $this->assertSame('Erro ao localizar orçamentos', $response->getMessage());
     }
 }
