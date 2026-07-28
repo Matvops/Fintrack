@@ -94,10 +94,10 @@ class BudgetsServiceTest extends MockeryTestCase {
         $db->shouldReceive('commit')->andReturnNull();
 
         $dto = EditBudgetDTO::fromArray([
-            'bdt_id' => 1,
-            'bdt_name' => 'Transporte',
-            'bdt_limit' => '4.230,23',
-            'bdt_color' => 'violeta',
+            'id' => 1,
+            'name' => 'Transporte',
+            'limit' => '4.230,23',
+            'color' => 'violeta',
         ]);
 
         $oldBudget = new Budget();
@@ -145,10 +145,10 @@ class BudgetsServiceTest extends MockeryTestCase {
         $db->shouldReceive('rollback')->andReturnNull();
 
         $dto = EditBudgetDTO::fromArray([
-            'bdt_id' => 1,
-            'bdt_name' => 'Transporte',
-            'bdt_limit' => '4.230,23',
-            'bdt_color' => 'violeta',
+            'id' => 1,
+            'name' => 'Transporte',
+            'limit' => '4.230,23',
+            'color' => 'violeta',
         ]);
 
         $oldBudget = new Budget();
