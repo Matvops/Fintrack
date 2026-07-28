@@ -17,10 +17,10 @@ readonly class EditBudgetDTO {
     public static function fromArray(array $array): self 
     {
         return new self(
-            id: $array['bdt_id'], 
-            name: $array['bdt_name'], 
-            limit: Functions::formatValue($array['bdt_limit']), 
-            color: strtoupper($array['bdt_color']), 
+            id: $array['id'], 
+            name: $array['name'], 
+            limit: Functions::formatValue($array['limit']), 
+            color: strtoupper($array['color']), 
         );
     }
 
