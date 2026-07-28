@@ -29,8 +29,8 @@ readonly class BudgetDTO {
             name: $budget->bdt_name,
             limit: $budget->bdt_limit,
             color: $budget->bdt_color,
-            amountSpent: $amountSpent,
-            remainingValue: strval($budget->bdt_limit - $amountSpent),
+            amountSpent: number_format($amountSpent, 2, '.', ''),
+            remainingValue: number_format($budget->bdt_limit - $amountSpent, 2, '.', ''),
             percentage: Functions::getPercentage($amountSpent, $budget->bdt_limit),
             transactions: $transactions
         );
