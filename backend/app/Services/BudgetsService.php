@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Dto\Budget\BudgetDTO;
 use App\Dto\Budget\CreateBudgetDTO;
 use App\Dto\Budget\EditBudgetDTO;
 use App\Exceptions\NotFoundException;
@@ -60,15 +61,13 @@ class BudgetsService {
 
             if (count($budgets) < 1) throw new NotFoundException("Sem Orçamentos");
 
+            $dtos = [];
             foreach($budgets as $budget) {
-                $transactions = $this->transactionRepository->getTransactionsByBudgetId($budget->bdt_id, $initialDate, $finishDate)->toArray();
-                $budget->bdt_transactions = $transactions;
-                $budget->bdt_amount_spent = strval(array_reduce($transactions, fn ($carry, $item) => $carry + $item['tra_value'], 0));
-                $budget->bdt_remaining_value = strval($budget->bdt_limit - $budget->bdt_amount_spent);
-                $budget->bdt_percentage = Functions::getPercentage($budget->bdt_amount_spent, $budget->bdt_limit);
+                $transactions = $this->transactionRepository->getTransactionsByBudgetId($budget->bdt_id, $initialDate, $finishDate);
+                $dtos[] = BudgetDTO::fromBudget($budget, $transactions);
             }
 
-            return Response::getResponse(true, 'Orçamentos encontrados', $budgets);
+            return Response::getResponse(true, 'Orçamentos encontrados', $dtos);
         } catch(NotFoundException $e) {
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
         } catch(Exception $e) {
