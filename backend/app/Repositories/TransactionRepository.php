@@ -19,7 +19,8 @@ class TransactionRepository {
     public function getTransactionsByBudgetId(int $budgetId, string $initialDate, string $finishDate) {
         return Transaction::where('tra_bdt_id', $budgetId)
                             ->whereBetween('tra_date', [$initialDate, $finishDate])
-                            ->get();
+                            ->get()
+                            ->toArray();
     } 
 
     public function register(CreateTransactionDTO $dto): Transaction
