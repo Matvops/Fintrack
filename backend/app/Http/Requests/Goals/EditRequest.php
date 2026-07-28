@@ -23,24 +23,24 @@ class EditRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'gls_id' => 'required|exists:goals,gls_id',
-            'gls_name' => 'required',
-            'gls_balance' => 'required',
-            'gls_balance_target' => 'required',
-            'gls_color' => 'required|in:ambar,esmeralda,azul,rosa,violeta'
+            'id' => 'required|exists:goals,gls_id',
+            'name' => 'required',
+            'balance' => 'required',
+            'balanceTarget' => 'required',
+            'color' => 'required|in:ambar,esmeralda,azul,rosa,violeta'
         ];
     }
 
     public function messages(): array
     {
         return [
-            'gls_id.required' => 'O id é obrigatório',
-            'gls_id.exists' => 'Erro ao editar meta',
-            'gls_name.required' => 'O nome é obrigatório',
-            'gls_balance.required' => 'O valor atual é obrigatório',
-            'gls_balance_target.required' => 'O valor objetivo é obrigatório',
-            'gls_color.required' => 'A cor é obrigatória',
-            'gls_color.in' => 'A cor é inválida'
+            'id.required' => 'O id é obrigatório',
+            'id.exists' => 'Erro ao editar meta',
+            'name.required' => 'O nome é obrigatório',
+            'balance.required' => 'O valor atual é obrigatório',
+            'balanceTarget.required' => 'O valor objetivo é obrigatório',
+            'color.required' => 'A cor é obrigatória',
+            'color.in' => 'A cor é inválida'
         ];
     }
 }

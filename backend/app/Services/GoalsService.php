@@ -2,66 +2,43 @@
 
 namespace App\Services;
 
+use App\Dto\Goal\CreateGoalDTO;
+use App\Dto\Goal\EditGoalDTO;
+use App\Dto\Goal\GoalDTO;
 use App\Exceptions\NotFoundException;
-use App\Exceptions\ValidationException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
-use App\Models\Goal;
 use App\Repositories\GoalRepository;
-use App\Repositories\UserRepository;
-use App\Utils\Functions;
 use App\Utils\Response;
-use Exception;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class GoalsService
 {
 
-    private UserRepository $userRepository;
     private GoalRepository $goalRepository;
 
-    public function __construct(UserRepository $userRepository, GoalRepository $goalRepository)
+    public function __construct(GoalRepository $goalRepository)
     {
-        $this->userRepository = $userRepository;
         $this->goalRepository = $goalRepository;
     }
 
-
-    public function create(array $data): Response
+    public function create(CreateGoalDTO $dto): Response
     {
         try {
 
-            $user = $this->userRepository->getUserById($data['id']);
-
-            if (!isset($user)) throw new ValidationException('Erro ao criar meta', 404);
-
-            $balance = Functions::formatValue($data['balance']);
-            $balanceTarget = Functions::formatValue($data['balanceTarget']);
-
-            $goal = new Goal();
-            $goal->gls_use_id = $user->use_id;
-            $goal->gls_name = $data['name'];
-            $goal->gls_balance = $balance;
-            $goal->gls_balance_target = str_replace(',', '.', $balanceTarget);
-            $goal->gls_color = strtoupper($data['color']);
-            $goal->save();
+            $goal = $this->goalRepository->register($dto);
 
             LogInvoker::create(new InfoLogBuilder)
-                        ->withPayload($data)
-                        ->withPayload($goal)
+                        ->withPayload($dto->toArray())
+                        ->withResponse($goal)
                         ->save('GOAL');
 
-
             return Response::getResponse(true, 'Meta criada com sucesso');
-        } catch (ValidationException $e) {
+        } catch (Throwable $e) {
             LogInvoker::create(new ErrorLogBuilder)
-                        ->withPayload($data)
-                        ->save('GOAL', $e);
-            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch (Exception $e) {
-            LogInvoker::create(new ErrorLogBuilder)
-                        ->withPayload($data)
+                        ->withPayload($dto->toArray())
                         ->save('GOAL', $e);
             return Response::getResponse(false, 'Erro ao criar meta', code: 500);
         }
@@ -76,53 +53,38 @@ class GoalsService
 
             if (count($goals) < 1) throw new NotFoundException("Sem metas");
 
-            foreach ($goals as $goal) {
-                $goal->percentage = Functions::getPercentage((float) $goal->gls_balance, (float) $goal->gls_balance_target);
-                $goal->missing =  $goal->gls_balance_target - $goal->gls_balance;
-            }
+            $dtos = [];
+            foreach ($goals as $goal) $dtos[] = GoalDTO::fromGoal($goal);
 
-            return Response::getResponse(true, 'Metas encontradas', $goals);
+            return Response::getResponse(true, 'Metas encontradas', $dtos);
         } catch (NotFoundException $e) {
             return Response::getResponse(false, $e->getMessage(), [], code: $e->getCode());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return Response::getResponse(false, 'Metas não localizadas', [], code: 500);
         }
     }
 
-    public function edit(array $request): Response
+    public function edit(EditGoalDTO $dto): Response
     {
         try {
 
             DB::beginTransaction();
 
-            $goal = $this->goalRepository->getGoalById($request['gls_id']);
-
-            if(!$goal) throw new NotFoundException("Erro ao localizar meta");
-
-            $goal->gls_name = $request['gls_name'];
-            $goal->gls_balance = Functions::formatValue($request['gls_balance']);
-            $goal->gls_balance_target = Functions::formatValue($request['gls_balance_target']);
-            $goal->gls_color = strtoupper($request['gls_color']);
-            $goal->save();
+            $goal = $this->goalRepository->getGoalById($dto->id);
+            $goal = $this->goalRepository->edit($goal, $dto);
 
             LogInvoker::update(new InfoLogBuilder)
-                        ->withPayload($request)
+                        ->withPayload($dto->toArray())
                         ->withResponse($goal)
                         ->save('GOAL');
 
             DB::commit();
 
             return Response::getResponse(true, 'Meta editada com sucesso');
-        } catch (NotFoundException $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             LogInvoker::update(new ErrorLogBuilder)
-                        ->withPayload($request)
-                        ->save('GOAL', $e);
-            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch (Exception $e) {
-            DB::rollBack();
-            LogInvoker::update(new ErrorLogBuilder)
-                        ->withPayload($request)
+                        ->withPayload($dto->toArray())
                         ->save('GOAL', $e);
             return Response::getResponse(false, 'Metas não localizadas', code: 500);
         }
@@ -134,33 +96,20 @@ class GoalsService
 
             DB::beginTransaction();
 
-            $goal = $this->goalRepository->getGoalById($id);
-            
-            if(!$goal) throw new NotFoundException("Erro ao localizar meta");
-
-            $goal->delete();
+            $this->goalRepository->delete($id);
 
             LogInvoker::delete(new InfoLogBuilder)
                         ->withPayload(['id' => $id])
-                        ->withResponse($goal)
                         ->save('GOAL');
 
             DB::commit();
             return Response::getResponse(true, 'Meta excluída com sucesso');
-        } catch (NotFoundException $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             LogInvoker::delete(new ErrorLogBuilder)
                         ->withPayload(['id' => $id])
                         ->save('GOAL', $e);
-
-            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch (Exception $e) {
-            DB::rollBack();
-            LogInvoker::delete(new ErrorLogBuilder)
-                        ->withPayload(['id' => $id])
-                        ->save('GOAL', $e);
-                        
-            return Response::getResponse(false, 'Metas não localizadas', code: 500);
+            return Response::getResponse(false, 'Erro ao excluir a meta', code: 500);
         }
     }
 }

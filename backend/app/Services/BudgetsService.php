@@ -2,18 +2,21 @@
 
 namespace App\Services;
 
+use App\Dto\Budget\BudgetDTO;
+use App\Dto\Budget\CreateBudgetDTO;
+use App\Dto\Budget\EditBudgetDTO;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\PermissionDeniedException;
 use App\Logging\ErrorLogBuilder;
 use App\Logging\InfoLogBuilder;
 use App\Logging\LogInvoker;
-use App\Models\Budget;
 use App\Repositories\BudgetRepository;
 use App\Repositories\TransactionRepository;
 use App\Utils\Functions;
 use App\Utils\Response;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class BudgetsService {
 
@@ -27,27 +30,21 @@ class BudgetsService {
     }
 
 
-    public function create(array $request): Response
+    public function create(CreateBudgetDTO $dto): Response
     {
         try {
             
-            $budget = new Budget();
-            $budget->bdt_use_id = $request['id'];
-            $budget->bdt_name = $request['name'];
-            $budget->bdt_limit = Functions::formatValue($request['limit']);
-            $budget->bdt_color = strtoupper($request['color']);
-            $budget->bdt_current_expense = 0;
-            $budget->save();
+           $budget = $this->budgetRepository->register($dto);
 
             LogInvoker::create(new InfoLogBuilder)
-                        ->withPayload($request)
+                        ->withPayload($dto->toArray())
                         ->withResponse($budget)
                         ->save('BUDGET');
 
             return Response::getResponse(true, 'Orçamento criado com sucesso', code: 201);
-        } catch(Exception $e) {
+        } catch(Throwable $e) {
             LogInvoker::create(new ErrorLogBuilder)
-                        ->withPayload($request)
+                        ->withPayload($dto->toArray())
                         ->save('BUDGET', $e);
             return Response::getResponse(false, 'Erro ao criar novo orçamento', code: $e->getCode());
         }
@@ -64,16 +61,16 @@ class BudgetsService {
 
             if (count($budgets) < 1) throw new NotFoundException("Sem Orçamentos");
 
+            $dtos = [];
             foreach($budgets as $budget) {
-                $transactions = $this->transactionRepository->getTransactionsByBudgetId($budget->bdt_id, $initialDate, $finishDate)->toArray();
-                $budget->bdt_transactions = $transactions;
-                $budget->bdt_amount_spent = strval(array_reduce($transactions, fn ($carry, $item) => $carry + $item['tra_value'], 0));
-                $budget->bdt_remaining_value = strval($budget->bdt_limit - $budget->bdt_amount_spent);
-                $budget->bdt_percentage = Functions::getPercentage($budget->bdt_amount_spent, $budget->bdt_limit);
+                $transactions = $this->transactionRepository->getTransactionsByBudgetId($budget->bdt_id, $initialDate, $finishDate);
+                $dtos[] = BudgetDTO::fromBudget($budget, $transactions);
             }
 
-            return Response::getResponse(true, 'Orçamentos encontrados', $budgets);
-        } catch(Exception $e) {
+            return Response::getResponse(true, 'Orçamentos encontrados', $dtos);
+        } catch(NotFoundException $e) {
+            return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
+        } catch(Throwable $e) {
             return Response::getResponse(false, 'Erro ao localizar orçamentos', code: $e->getCode());
         }
     }
@@ -85,8 +82,6 @@ class BudgetsService {
             DB::beginTransaction();
 
             $budget = $this->budgetRepository->getBudgetById($id);
-
-            if(!$budget) throw new NotFoundException('Orçamento não encontrado');
 
             $transactions = $budget->transactions();
 
@@ -101,7 +96,7 @@ class BudgetsService {
 
             DB::commit();
             return Response::getResponse(true, 'Orçamento excluído com sucesso');
-        } catch (NotFoundException|PermissionDeniedException $e) {
+        } catch (PermissionDeniedException $e) {
             DB::rollBack();
 
             LogInvoker::delete(new ErrorLogBuilder)
@@ -109,7 +104,7 @@ class BudgetsService {
                         ->save('BUDGET', $e);
 
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             
             LogInvoker::delete(new ErrorLogBuilder)
@@ -120,30 +115,27 @@ class BudgetsService {
         }
     }
 
-    public function edit(array $data): Response
+    public function edit(EditBudgetDTO $dto): Response
     {
         try {
 
             DB::beginTransaction();
 
-            $budget = $this->budgetRepository->getBudgetById($data['bdt_id']);
-            $budget->bdt_name = $data['bdt_name'];
-            $budget->bdt_limit = Functions::formatValue($data['bdt_limit']);
-            $budget->bdt_color = strtoupper($data['bdt_color']);
-            $budget->save();
+            $budget = $this->budgetRepository->getBudgetById($dto->id);
+            $this->budgetRepository->edit($dto, $budget);
 
             LogInvoker::update(new InfoLogBuilder)
-                        ->withPayload($data)
+                        ->withPayload($dto->toArray())
                         ->withResponse($budget)
                         ->save('BUDGET');
 
             DB::commit();
             return Response::getResponse(true, 'Orçamento editado com sucesso');
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
 
             LogInvoker::update(new ErrorLogBuilder)
-                        ->withPayload($data)
+                        ->withPayload($dto->toArray())
                         ->save('BUDGET', $e);
 
             return Response::getResponse(false, 'Orçamento não localizado', code: 500);

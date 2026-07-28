@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Dto\Auth\LoginDTO;
+use App\Dto\Auth\RegisterDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\LogoutRequest;
@@ -19,26 +21,18 @@ class AuthController extends Controller {
 
     public function login(LoginRequest $request) {
         
-        $dados = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-        ];
+        $loginDTO = LoginDTO::fromArray($request->validated());
 
-        $response = $this->service->login($dados);
+        $response = $this->service->login($loginDTO);
 
         return $this->sendResponse($response);
     }
 
     public function register(RegisterRequest $request) {
         
-        $dados = [
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-            'confirmationPassword' => $request->input('confirmationPassword'),
-        ];
+        $registerDTO = RegisterDTO::fromArray($request->validated()); 
 
-        $response = $this->service->register($dados);
+        $response = $this->service->register($registerDTO);
 
         return $this->sendResponse($response);
     }

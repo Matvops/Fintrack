@@ -40,6 +40,11 @@ class LogInvoker {
         return new LogInvoker($builder);
     }
 
+    public static function logout(LogBuilder $builder) {
+        $builder->setAction(ActionEnum::LOGOUT);
+        return new LogInvoker($builder);
+    }
+
     public static function register(LogBuilder $builder) {
         $builder->setAction(ActionEnum::REGISTER);
         return new LogInvoker($builder);

@@ -20,11 +20,11 @@ export function ModalEditBudget({ setVisible, edit, excluir, budget }: ModalEdit
 
   const formatToReal = useFormatToReal();
 
-  const [name, setName] = useState(budget.bdt_name ?? '');
-  const [limit, setLimit] = useState(formatToReal(budget.bdt_limit.toString() ?? '0'));
+  const [name, setName] = useState(budget.name ?? '');
+  const [limit, setLimit] = useState(formatToReal(budget.limit.toString() ?? '0'));
   const [color, setColor] = useState<MainColor>(() => {
 
-    const color = budget?.bdt_color.toLowerCase();
+    const color = budget?.color.toLowerCase();
     if (color !== 'ambar' && color !== 'rosa' && color !== 'violeta' && color !== 'esmeralda' && color !== 'azul') {
       return 'ambar'
     }
@@ -45,10 +45,10 @@ export function ModalEditBudget({ setVisible, edit, excluir, budget }: ModalEdit
         </div>
 
         <form className={style.form} onSubmit={(e) => edit({
-          bdt_id: budget.bdt_id,
-          bdt_name: name,
-          bdt_color: color,
-          bdt_limit: limit
+          id: budget.id,
+          name: name,
+          color: color,
+          limit: limit
         }, e)}>
 
           <InputDefault
@@ -76,7 +76,7 @@ export function ModalEditBudget({ setVisible, edit, excluir, budget }: ModalEdit
           </div>
 
           <div className={style.buttons}>
-            <button type='button' className={`${style.buttonHeaderSection} ${style.buttonCancel}`} onClick={(e) => excluir(budget.bdt_id, e)}
+            <button type='button' className={`${style.buttonHeaderSection} ${style.buttonCancel}`} onClick={(e) => excluir(budget.id, e)}
             >
               <Trash /> Excluir
             </button>

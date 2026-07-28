@@ -13,6 +13,7 @@ export function DateSelector() {
 
     if(dateObj.toLocaleDateString() == actualDate.toLocaleDateString() && action === 'next') return;
 
+    dateObj.setTime(new Date().getTime());
     if(action === 'next') {
       dateObj.setMonth(dateObj.getMonth() + 1);
     } else {

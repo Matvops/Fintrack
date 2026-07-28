@@ -5,12 +5,13 @@ export function useFormatToReal() {
 
     const { user } = useContext(UserContext);
 
-    return (valor: string): string => {
+    return (valor: string|number): string => {
         if (user.hiddenData) {
             return '••••'; 
         }
 
-        const apenasNumeros = valor.replace(/\D/g, '');
+        
+        const apenasNumeros = valor?.toString().replace(/\D/g, '');
 
         const valorNumerico = Number(apenasNumeros) / 100;
 

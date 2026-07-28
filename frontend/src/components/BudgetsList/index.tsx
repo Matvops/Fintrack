@@ -17,17 +17,17 @@ export function BudgetsList({ budgets, setBudget, setModalVisible }: BudgetsList
 
     return budgets.map((budget, index) => {
 
-      const percentage = budget.bdt_percentage ? budget.bdt_percentage / 100 : 0;
+      const percentage = budget.percentage ? budget.percentage / 100 : 0;
 
       return (
         <div className={style.card} key={index}>
           <div className={style.headerCard}>
 
-            <h2 className={style.headerTitle}>{budget.bdt_name}</h2>
+            <h2 className={style.headerTitle}>{budget.name}</h2>
 
             <div className={style.cardValues}>
               <div>
-                <span className={style.headerSubTitle}>{formatToReal(budget.bdt_amount_spent ?? '')} / {formatToReal(budget.bdt_limit.toString())}</span>
+                <span className={style.headerSubTitle}>{formatToReal(budget.amountSpent ?? '')} / {formatToReal(budget.limit.toString())}</span>
               </div>
               <button className={style.buttonEdit} onClick={() => {
                 setBudget(budget);
@@ -38,13 +38,13 @@ export function BudgetsList({ budgets, setBudget, setModalVisible }: BudgetsList
             </div>
           </div>
 
-          <progress className={`${style.progressBar} ${style['background-' + budget.bdt_color.toLowerCase()]}`} value={percentage} />
+          <progress className={`${style.progressBar} ${style['background-' + budget.color.toLowerCase()]}`} value={percentage} />
 
           <div className={style.footerCard}>
-            <span className={style.headerSubTitle}>{Number(budget.bdt_amount_spent) > Number(budget.bdt_limit) ? 'Excedeu' : 'Restam'} 
-              {formatToReal(budget.bdt_remaining_value ?? '')}
+            <span className={style.headerSubTitle}>{Number(budget.amountSpent) > Number(budget.limit) ? 'Excedeu ' : 'Restam '} 
+              {formatToReal(budget.remainingValue ?? '')}
             </span>
-            <span className={`${style.percentage} ${style[budget.bdt_color.toLowerCase()]}`}>{budget.bdt_percentage}%</span>
+            <span className={`${style.percentage} ${style[budget.color.toLowerCase()]}`}>{budget.percentage}%</span>
           </div>
         </div>
       )

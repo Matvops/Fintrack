@@ -21,13 +21,13 @@ export function ModalEditGoal({ setVisible, editar, excluir, goal }: ModalEditGo
     
   const formatToReal = useFormatToReal();
 
-  const [name, setName] = useState(goal.gls_name ?? '');
-  const [balance, setBalance] = useState(formatToReal(goal.gls_balance ?? '0'));
-  const [balanceTarget, setBalanceTarget] = useState(formatToReal(goal.gls_balance_target ?? ''));
+  const [name, setName] = useState(goal.name ?? '');
+  const [balance, setBalance] = useState(formatToReal(goal.balance ?? '0'));
+  const [balanceTarget, setBalanceTarget] = useState(formatToReal(goal.balanceTarget ?? ''));
   const [color, setColor] = useState<MainColor>(() => {
 
 
-    const color = goal?.gls_color.toLowerCase();
+    const color = goal?.color.toLowerCase();
     if (color !== 'ambar' && color !== 'rosa' && color !== 'violeta' && color !== 'esmeralda' && color !== 'azul') {
       return 'ambar'
     }
@@ -48,11 +48,11 @@ export function ModalEditGoal({ setVisible, editar, excluir, goal }: ModalEditGo
         </div>
 
         <form className={style.form} onSubmit={(e) => editar({
-          gls_id: goal.gls_id,
-          gls_balance: balance,
-          gls_balance_target: balanceTarget,
-          gls_name: name,
-          gls_color: color,
+          id: goal.id,
+          balance: balance,
+          balanceTarget: balanceTarget,
+          name: name,
+          color: color,
         }, e)}>
 
           <InputDefault
@@ -90,7 +90,7 @@ export function ModalEditGoal({ setVisible, editar, excluir, goal }: ModalEditGo
           </div>
 
           <div className={style.buttons}>
-            <button type='button' className={`${style.buttonHeaderSection} ${style.buttonCancel}`} onClick={(e) => excluir(goal.gls_id, e)}
+            <button type='button' className={`${style.buttonHeaderSection} ${style.buttonCancel}`} onClick={(e) => excluir(goal.id, e)}
             >
               <Trash /> Excluir
             </button>
