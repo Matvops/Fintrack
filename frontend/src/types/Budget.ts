@@ -1,14 +1,14 @@
 import type { MainColor } from "./MainColor";
 
 export interface Budget {
-    bdt_id: number,
+    id: number,
     bdt_use_id?: number,
-    bdt_name: string,
-    bdt_limit: number|string,
-    bdt_color: MainColor,
+    name: string,
+    limit: number|string,
+    color: MainColor,
     create_at?: string|number,
     updated_at?: string|number,
-    bdt_amount_spent?: string,
-    bdt_remaining_value?: string,
-    bdt_percentage?: number
+    amountSpent?: string,
+    remainingValue?: string,
+    percentage?: number
 }
