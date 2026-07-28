@@ -70,7 +70,7 @@ class BudgetsService {
             return Response::getResponse(true, 'Orçamentos encontrados', $dtos);
         } catch(NotFoundException $e) {
             return Response::getResponse(false, $e->getMessage(), code: $e->getCode());
-        } catch(Exception $e) {
+        } catch(Throwable $e) {
             return Response::getResponse(false, 'Erro ao localizar orçamentos', code: $e->getCode());
         }
     }
